@@ -37,42 +37,55 @@ public class LocalMessage implements CommandExecutor {
 		{
 			Player player = parent.getServer().getPlayer(arg0.getName());
 			// find players around player
+			int count = 0;
 			
 			for (Player p : player.getWorld().getPlayers())
 			{
-				
-				// first we need to check if this player is in the redstone world, if so they receive the message by deafult
-				if (p.getWorld().getName().compareTo("Redstone") > 0)
+				if (p.equals(player))
 				{
-					// ARE in Redstone world - do none distance based checking
-					p.sendMessage(player.getName() + " yells '" + message + "'");
-					
+					// talking to self
 				} else {
-					// NOT in Redstone world - do distance based checking
-				
-					// this player is in the players world, are they in range?
-					double x1 = p.getLocation().getX();
-	                double y1 = p.getLocation().getY();
-	                double z1 = p.getLocation().getZ();
-	
-	                double x2 = player.getLocation().getX();
-	                double y2 = player.getLocation().getY();
-	                double z2 = player.getLocation().getZ();
+					// not talking to self
+					// first we need to check if this player is in the redstone world, if so they receive the message by deafult
+					if (p.getWorld().getName().compareTo("Redstone") > 0)
+					{
+						// ARE in Redstone world - do none distance based checking
+						p.sendMessage(player.getName() + " yells '" + message + "'");
+						count++;
+					} else {
+						// NOT in Redstone world - do distance based checking
 					
-					int xdist = (int) (x1 - x2);
-	                int ydist = (int) (y1 - y2);
-	                int zdist = (int) (z1 - z2);
-	                
-	                if ((xdist < -300 || xdist > 300) || (ydist < -300 || ydist > 300) || (zdist < -300 || zdist > 300)) {
-	                    // out of range to do this
-	                	
-	                } else {
-	                	
-	                	p.sendMessage(player.getName() + " says '" + message + "'");
-	                
-	                }
+						// this player is in the players world, are they in range?
+						double x1 = p.getLocation().getX();
+		                double y1 = p.getLocation().getY();
+		                double z1 = p.getLocation().getZ();
+		
+		                double x2 = player.getLocation().getX();
+		                double y2 = player.getLocation().getY();
+		                double z2 = player.getLocation().getZ();
+						
+						int xdist = (int) (x1 - x2);
+		                int ydist = (int) (y1 - y2);
+		                int zdist = (int) (z1 - z2);
+		                
+		                if ((xdist < -300 || xdist > 300) || (ydist < -300 || ydist > 300) || (zdist < -300 || zdist > 300)) {
+		                    // out of range to do this
+		                	
+		                } else {
+		                	
+		                	p.sendMessage(player.getName() + " says '" + message + "'");
+		                	count++;
+		                }
+					}
+					
 				}
 			}
+			
+			if (count < 1)
+			{
+				player.sendMessage("You speak but nobody hears you (Use global chat instead - default T button)");
+			}
+			
 			return true;
 		} 
 		catch (Exception e)
