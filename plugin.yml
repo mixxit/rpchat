@@ -1,0 +1,16 @@
+name: rpchat
+main: net.gamerservices.rpchat.rpchat
+version: 0.01
+website: http://www.gamerservices.net
+author: Mixxit
+database: true
+description: >
+             Basic localised chat functionality.
+             This plugin allows a player to chat locally
+commands:
+  local:
+    aliases: [l]
+    description: Speaks locally
+    usage: |
+           /<command> [msg]
+           Example: /<command> Hello, people near me!
