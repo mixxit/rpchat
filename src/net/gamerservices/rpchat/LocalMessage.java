@@ -10,6 +10,9 @@ import org.bukkit.entity.Player;
 import com.palmergames.bukkit.towny.Towny;
 import com.palmergames.bukkit.towny.object.Resident;
 
+import de.bananaco.permissions.Permissions;
+import de.bananaco.permissions.info.InfoReader;
+
 public class LocalMessage implements CommandExecutor {
 
 	private rpchat parent;
@@ -53,7 +56,10 @@ public class LocalMessage implements CommandExecutor {
 			String tag = "";
 			
 			try {
-				tag = this.parent.permission.getPrimaryGroup(player);				
+				InfoReader info = Permissions.getInfoReader();
+				tag = info.getPrefix(player);
+				//tag = this.parent.permission.getPrimaryGroup(player);		
+				
 			}
 			catch (Exception e)
 			{

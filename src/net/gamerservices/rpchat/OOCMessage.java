@@ -12,6 +12,9 @@ import com.palmergames.bukkit.towny.NotRegisteredException;
 import com.palmergames.bukkit.towny.Towny;
 import com.palmergames.bukkit.towny.object.Resident;
 
+import de.bananaco.permissions.Permissions;
+import de.bananaco.permissions.info.InfoReader;
+
 public class OOCMessage implements CommandExecutor {
 
 
@@ -75,11 +78,12 @@ public class OOCMessage implements CommandExecutor {
 			String tag = "";
 			
 			try {
-				tag = this.parent.permission.getPrimaryGroup(player);				
+				InfoReader info = Permissions.getInfoReader();
+				tag = info.getPrefix(player);			
 			}
 			catch (Exception e)
 			{
-				tag = "NoGroup";
+				tag = "Guest";
 			}
 			
 			

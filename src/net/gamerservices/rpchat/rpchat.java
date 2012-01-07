@@ -8,11 +8,11 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.PersistenceException;
-
+/*
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
-
+*/
 import org.bukkit.Server;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.event.Event.Priority;
@@ -32,9 +32,11 @@ public class rpchat extends JavaPlugin
   private Towny towny = null;
   private Listener rpchatPlayerListener;
 	
-  public static Permission permission = null;
-  public static Economy economy = null;
-  public static Chat chat = null;
+  // vault didnt support prefix's
+
+  //public static Permission permission = null;
+  //public static Economy economy = null;
+  //public static Chat chat = null;
   
   public void onDisable()
   {
@@ -44,7 +46,7 @@ public class rpchat extends JavaPlugin
 
 
 	
-
+/*
   private Boolean setupPermissions()
   {
       RegisteredServiceProvider<Permission> permissionProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.permission.Permission.class);
@@ -73,6 +75,8 @@ public class rpchat extends JavaPlugin
 
       return (economy != null);
   }
+  
+  */
   
   public void onEnable()
   {
