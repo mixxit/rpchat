@@ -58,6 +58,7 @@ public class LocalMessage implements CommandExecutor {
 			try {
 				InfoReader info = Permissions.getInfoReader();
 				tag = info.getPrefix(player);
+				tag = this.parent.formatString(tag);
 				//tag = this.parent.permission.getPrimaryGroup(player);		
 				
 			}
@@ -100,6 +101,7 @@ public class LocalMessage implements CommandExecutor {
 					// talking to self
 					if (p.getWorld().getName().compareTo("Redstone") == 0)
 					{
+						
 						p.sendMessage("[" + ChatColor.GOLD + nation + ChatColor.WHITE + "|" + ChatColor.AQUA + town + ChatColor.WHITE + "] ["+tag+"][YELL] " + player.getName() + ChatColor.YELLOW + " yells '" + message + "'");
 					} else {
 						p.sendMessage("[" + ChatColor.GOLD + nation + ChatColor.WHITE + "|" + ChatColor.AQUA + town + ChatColor.WHITE + "] ["+tag+"][RP] " + player.getName() + ChatColor.YELLOW + " says '" + message + "'");						

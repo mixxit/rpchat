@@ -13,6 +13,7 @@ import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 */
+import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.event.Event.Priority;
@@ -77,6 +78,14 @@ public class rpchat extends JavaPlugin
   }
   
   */
+  
+  public String formatString(String string) {
+      String s = string;
+          for (ChatColor color : ChatColor.values()) {
+              s = s.replaceAll("(?i)<" + color.name() + ">", "" + color);
+          }
+      return s;
+  }
   
   public void onEnable()
   {

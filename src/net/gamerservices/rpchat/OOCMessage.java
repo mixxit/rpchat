@@ -80,6 +80,7 @@ public class OOCMessage implements CommandExecutor {
 			try {
 				InfoReader info = Permissions.getInfoReader();
 				tag = info.getPrefix(player);			
+				tag = this.parent.formatString(tag);
 			}
 			catch (Exception e)
 			{
