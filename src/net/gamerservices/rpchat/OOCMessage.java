@@ -118,11 +118,11 @@ public class OOCMessage implements CommandExecutor {
 				if (p.equals(player))
 				{
 					// talking to self
-					p.sendMessage("[" + ChatColor.GOLD + nation + ChatColor.WHITE + "|" + ChatColor.AQUA + town + ChatColor.WHITE + "] ["+tag+"]"+ ChatColor.WHITE+"[OOC] " + player.getName() + ChatColor.WHITE + ": " + message);
+					p.sendMessage("[" + ChatColor.GOLD + nation + ChatColor.WHITE + "|" + ChatColor.AQUA + town + ChatColor.WHITE + "] "+tag+ChatColor.WHITE+"[OOC] " + player.getName() + ChatColor.WHITE + ": " + message);
 				} else {
 							// not talking to self
 							// ARE in the same world and not self - no distance based checking required
-					p.sendMessage("[" + ChatColor.GOLD + nation + ChatColor.WHITE + "|" + ChatColor.AQUA + town + ChatColor.WHITE + "] ["+tag+"]"+ ChatColor.WHITE+"[OOC] " + player.getName() + ChatColor.WHITE + ": " + message);
+					p.sendMessage("[" + ChatColor.GOLD + nation + ChatColor.WHITE + "|" + ChatColor.AQUA + town + ChatColor.WHITE + "] "+tag+ChatColor.WHITE+"[OOC] " + player.getName() + ChatColor.WHITE + ": " + message);
 							count++;
 				}
 			}
