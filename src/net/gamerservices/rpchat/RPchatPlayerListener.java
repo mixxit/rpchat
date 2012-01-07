@@ -20,7 +20,7 @@ public class RPchatPlayerListener extends PlayerListener {
 		//event.getPlayer().sendMessage("You must use /local <msg> for RP chat, /ooc <msg> for world chat or /g <msg> for global chat");
 		
 		// route it through local
-		DoOOCMessage(event.getPlayer(),event.getMessage());		
+		DoLocalMessage(event.getPlayer(),event.getMessage());		
 		event.setCancelled(true);
 	}
 	
