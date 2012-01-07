@@ -10,12 +10,12 @@ import org.bukkit.entity.Player;
 import com.palmergames.bukkit.towny.Towny;
 import com.palmergames.bukkit.towny.object.Resident;
 
-public class LocalMessage implements CommandExecutor {
+public class OOCMessage implements CommandExecutor {
 
 	private rpchat parent;
 	private Towny towny;
 	
-	public LocalMessage(rpchat rpchat) {
+	public OOCMessage(rpchat rpchat) {
 		// TODO Auto-generated constructor stub
 		this.parent = rpchat;
 		this.towny = this.parent.getTowny();
@@ -56,44 +56,15 @@ public class LocalMessage implements CommandExecutor {
 					// talking to self
 				} else {
 					// not talking to self
-					// first we need to check if this player is in the redstone world, if so they receive the message by deafult
-					if (p.getWorld().getName().compareTo("Redstone") > 0)
-					{
-						// ARE in Redstone world - do none distance based checking
-						p.sendMessage(res.getTown().getName() + "|" + res.getTitle() + " [RP] " + ChatColor.YELLOW + player.getName() + " yells '" + message + "'");
+					// ARE in the same world and not self - no distance based checking required
+						p.sendMessage(res.getTown().getName() + "|" + res.getTitle() + " [OOC] " + ChatColor.LIGHT_PURPLE + player.getName() + " says out of character '" + message + "'");
 						count++;
-					} else {
-						// NOT in Redstone world - do distance based checking
-					
-						// this player is in the players world, are they in range?
-						double x1 = p.getLocation().getX();
-		                double y1 = p.getLocation().getY();
-		                double z1 = p.getLocation().getZ();
-		
-		                double x2 = player.getLocation().getX();
-		                double y2 = player.getLocation().getY();
-		                double z2 = player.getLocation().getZ();
-						
-						int xdist = (int) (x1 - x2);
-		                int ydist = (int) (y1 - y2);
-		                int zdist = (int) (z1 - z2);
-		                
-		                if ((xdist < -300 || xdist > 300) || (ydist < -300 || ydist > 300) || (zdist < -300 || zdist > 300)) {
-		                    // out of range to do this
-		                	
-		                } else {
-		                	
-		                	p.sendMessage(res.getTown().getName() + "|" + ChatColor.YELLOW + res.getTitle() + " [RP] " + player.getName() + " says '" + message + "'");
-		                	count++;
-		                }
-					}
-					
 				}
 			}
 			
 			if (count < 1)
 			{
-				player.sendMessage("You speak but nobody hears you (Use worldwide /ooc <msg> instead.)");
+				player.sendMessage("You speak but nobody hears you (There is no-one in this world, try another world!)");
 			}
 			
 			return true;
@@ -102,7 +73,6 @@ public class LocalMessage implements CommandExecutor {
 		{
 			// could not find player
 			System.out.println("Error: " + e.getMessage());
-
 		}
 				
 		return false;
