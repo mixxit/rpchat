@@ -121,7 +121,7 @@ public class LocalMessage implements CommandExecutor {
 		                	
 		                } else {
 		                	
-		                	p.sendMessage("[" + ChatColor.GOLD + res.getTown().getNation() + ChatColor.WHITE + "|" + ChatColor.AQUA + res.getTown() + ChatColor.WHITE + "] [RP] " + player.getName() + ChatColor.YELLOW + " says '" + message + "'");
+		                	p.sendMessage("[" + ChatColor.GOLD + nation + ChatColor.WHITE + "|" + ChatColor.AQUA + town + ChatColor.WHITE + "] [RP] " + player.getName() + ChatColor.YELLOW + " says '" + message + "'");
 		                	count++;
 		                }
 					}
