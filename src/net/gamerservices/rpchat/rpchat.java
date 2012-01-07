@@ -13,6 +13,7 @@ import org.bukkit.command.PluginCommand;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event;
 import org.bukkit.event.Event.Type;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -23,6 +24,7 @@ public class rpchat extends JavaPlugin
 {
   private PluginManager pm;
   private Towny towny = null;
+  private Listener rpchatPlayerListener;
 	
   public void onDisable()
   {
@@ -58,9 +60,15 @@ public class rpchat extends JavaPlugin
 	
 	getCommand("local").setExecutor(new LocalMessage(this));
 	getCommand("ooc").setExecutor(new OOCMessage(this));
-	
+	registerEvents();
 		
   }
+  
+  public void registerEvents() {
+	  rpchatPlayerListener = new RPchatPlayerListener();
+      pm.registerEvent(Event.Type.PLAYER_CHAT, rpchatPlayerListener, Priority.Monitor, this); //Run this lower so we go before herochat? ( it needs to see us cancel).     
+}
+  
   protected Towny getTowny() {
 		return towny;
   }
