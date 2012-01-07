@@ -120,7 +120,7 @@ public class LocalMessage implements CommandExecutor {
 					if (p.getWorld().getName().compareTo("Redstone") == 0)
 					{
 						
-						p.sendMessage("[" + ChatColor.GOLD + nation + ChatColor.WHITE + "|" + ChatColor.AQUA + town + ChatColor.WHITE + "] "+tag+ChatColor.YELLOW+"[YELL] " + player.getName() + ChatColor.YELLOW + " yells '" + message + "'");
+						p.sendMessage("[" + ChatColor.GOLD + nation + ChatColor.WHITE + "|" + ChatColor.AQUA + town + ChatColor.WHITE + "] "+tag+ChatColor.YELLOW+"[Y] " + player.getName() + ChatColor.YELLOW + " yells '" + message + "'");
 					} else {
 						p.sendMessage("[" + ChatColor.GOLD + nation + ChatColor.WHITE + "|" + ChatColor.AQUA + town + ChatColor.WHITE + "] "+tag+ChatColor.YELLOW+"[RP] " + player.getName() + ChatColor.YELLOW + " says '" + message + "'");						
 					}
