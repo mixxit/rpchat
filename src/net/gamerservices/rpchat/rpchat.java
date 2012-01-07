@@ -82,7 +82,7 @@ public class rpchat extends JavaPlugin
   public String formatString(String string) {
       String s = string;
           for (ChatColor color : ChatColor.values()) {
-              s = s.replaceAll("(?i)<" + color.name() + ">", "" + color);
+              s = s.replaceAll("(&([a-f0-9]))", "\u00A7$2");
           }
       return s;
   }
