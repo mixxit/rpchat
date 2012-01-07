@@ -37,6 +37,10 @@ public class LocalMessage implements CommandExecutor {
 			String[] arg3) {
 		// TODO Auto-generated method stub
 		String message = arrayToString(arg3," ");
+		if (message.compareTo("") == 0)
+		{
+			return false;
+		}
 		// find the player
 		try 
 		{

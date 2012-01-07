@@ -43,8 +43,14 @@ public class OOCMessage implements CommandExecutor {
 		try 
 		{
 			Player player = parent.getServer().getPlayer(arg0.getName());
-			sendOOC(player,message);
-			return true;
+			if (message.compareTo("") > 0)
+			{
+				sendOOC(player,message);
+				return true;
+			} else {
+				return false;
+			}
+			
 		} 
 		catch (Exception e)
 		{
