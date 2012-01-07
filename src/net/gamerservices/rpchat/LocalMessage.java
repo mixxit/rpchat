@@ -93,7 +93,7 @@ public class LocalMessage implements CommandExecutor {
 			
 			if (count < 1)
 			{
-				player.sendMessage("You speak but nobody hears you (Use worldwide /ooc <msg> instead.)");
+				player.sendMessage(ChatColor.YELLOW + "You speak but nobody hears you (Use worldwide /ooc <msg> instead.)");
 			}
 			
 			return true;

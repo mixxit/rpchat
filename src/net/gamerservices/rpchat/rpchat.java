@@ -65,7 +65,7 @@ public class rpchat extends JavaPlugin
   }
   
   public void registerEvents() {
-	  rpchatPlayerListener = new RPchatPlayerListener();
+	  rpchatPlayerListener = new RPchatPlayerListener(this);
       pm.registerEvent(Event.Type.PLAYER_CHAT, rpchatPlayerListener, Priority.Monitor, this); //Run this lower so we go before herochat? ( it needs to see us cancel).     
 }
   
