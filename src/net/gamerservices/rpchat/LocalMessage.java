@@ -45,6 +45,32 @@ public class LocalMessage implements CommandExecutor {
 			// now that we have the player lets grab the players towny info
 			
 			Resident res = towny.getTownyUniverse().getResident(player.getName());
+			
+			
+			
+			String town = "";
+			try 
+			{
+				town = res.getTown().getName();
+			} 
+			catch (Exception e)
+			{
+				town = ""; // no town
+			}
+			
+			String nation = "";
+			
+			try 
+			{
+				nation = res.getTown().getNation().getName();
+			} 
+			catch (Exception e)
+			{
+				nation = ""; // no nation
+			}
+			
+			
+			
 
 			// find players around player
 			int count = 0;
@@ -54,13 +80,21 @@ public class LocalMessage implements CommandExecutor {
 				if (p.equals(player))
 				{
 					// talking to self
+					if (p.getWorld().getName().compareTo("Redstone") == 0)
+					{
+						p.sendMessage("[" + ChatColor.GOLD + nation + ChatColor.WHITE + "|" + ChatColor.AQUA + town + ChatColor.WHITE + "] [RP] " + player.getName() + ChatColor.YELLOW + " yells '" + message + "'");
+					} else {
+						p.sendMessage("[" + ChatColor.GOLD + nation + ChatColor.WHITE + "|" + ChatColor.AQUA + town + ChatColor.WHITE + "] [RP] " + player.getName() + ChatColor.YELLOW + " says '" + message + "'");						
+					}
+
+					
 				} else {
 					// not talking to self
 					// first we need to check if this player is in the redstone world, if so they receive the message by deafult
-					if (p.getWorld().getName().compareTo("Redstone") > 0)
+					if (p.getWorld().getName().compareTo("Redstone") == 0)
 					{
 						// ARE in Redstone world - do none distance based checking
-						p.sendMessage(res.getTown().getName() + "|" + res.getTitle() + " [RP] " + ChatColor.YELLOW + player.getName() + " yells '" + message + "'");
+						p.sendMessage("[" + ChatColor.GOLD + nation + ChatColor.WHITE + "|" + ChatColor.AQUA + town + ChatColor.WHITE + "] [RP] " + player.getName() + ChatColor.YELLOW + " yells '" + message + "'");
 						count++;
 					} else {
 						// NOT in Redstone world - do distance based checking
@@ -83,7 +117,7 @@ public class LocalMessage implements CommandExecutor {
 		                	
 		                } else {
 		                	
-		                	p.sendMessage(res.getTown().getName() + "|" + ChatColor.YELLOW + res.getTitle() + " [RP] " + player.getName() + " says '" + message + "'");
+		                	p.sendMessage("[" + ChatColor.GOLD + res.getTown().getNation() + ChatColor.WHITE + "|" + ChatColor.AQUA + res.getTown() + ChatColor.WHITE + "] [RP] " + player.getName() + ChatColor.YELLOW + " says '" + message + "'");
 		                	count++;
 		                }
 					}
@@ -93,7 +127,7 @@ public class LocalMessage implements CommandExecutor {
 			
 			if (count < 1)
 			{
-				player.sendMessage(ChatColor.YELLOW + "You speak but nobody hears you (Use worldwide /ooc <msg> instead.)");
+				player.sendMessage(ChatColor.GRAY + "* You speak but nobody hears you (Use worldwide /ooc <msg> instead.)");
 			}
 			
 			return true;
@@ -101,7 +135,7 @@ public class LocalMessage implements CommandExecutor {
 		catch (Exception e)
 		{
 			// could not find player
-			System.out.println("Error: " + e.getMessage());
+			System.out.println("[RPChat Error]: " + e.getMessage());
 
 		}
 				

@@ -44,14 +44,12 @@ public class OOCMessage implements CommandExecutor {
 		{
 			Player player = parent.getServer().getPlayer(arg0.getName());
 			sendOOC(player,message);
-			
-			
 			return true;
 		} 
 		catch (Exception e)
 		{
 			// could not find player
-			System.out.println("Error: " + e.getMessage());
+			System.out.println("[RPChat Error]: " + e.getMessage());
 		}
 				
 		return false;
@@ -64,6 +62,26 @@ public class OOCMessage implements CommandExecutor {
 		Resident res;
 		try {
 			res = towny.getTownyUniverse().getResident(player.getName());
+			String town = "";
+			try 
+			{
+				town = res.getTown().getName();
+			} 
+			catch (Exception e)
+			{
+				town = ""; // no town
+			}
+			
+			String nation = "";
+			
+			try 
+			{
+				nation = res.getTown().getNation().getName();
+			} 
+			catch (Exception e)
+			{
+				nation = ""; // no nation
+			}
 			
 			// find players around player
 			int count = 0;
@@ -73,17 +91,18 @@ public class OOCMessage implements CommandExecutor {
 				if (p.equals(player))
 				{
 					// talking to self
+					p.sendMessage("[" + ChatColor.GOLD + nation + ChatColor.WHITE + "|" + ChatColor.AQUA + town + ChatColor.WHITE + "] [RP] " + player.getName() + ChatColor.LIGHT_PURPLE + " says out of character '" + message + "'");
 				} else {
 							// not talking to self
 							// ARE in the same world and not self - no distance based checking required
-							p.sendMessage(res.getTown().getName() + "|" + res.getTitle() + " [OOC] " + ChatColor.LIGHT_PURPLE + player.getName() + " says out of character '" + message + "'");
+					p.sendMessage("[" + ChatColor.GOLD + nation + ChatColor.WHITE + "|" + ChatColor.AQUA + town + ChatColor.WHITE + "] [RP] " + player.getName() + ChatColor.LIGHT_PURPLE + " says out of character '" + message + "'");
 							count++;
 				}
 			}
 						
 			if (count < 1)
 			{
-				player.sendMessage(ChatColor.LIGHT_PURPLE + "You speak but nobody hears you (There is no-one in this world, try another world or use global chat /g)");
+				player.sendMessage(ChatColor.GRAY + "* You speak but nobody hears you (There is no-one in this world, try another world or use global chat /g)");
 			}
 			
 			
