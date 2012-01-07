@@ -30,4 +30,11 @@ public class RPchatPlayerListener extends PlayerListener {
 		 ooc.sendOOC(playername,message);
 		 
 	}
+	
+	public void DoLocalMessage(Player playername, String message)
+	{
+		 LocalMessage lm = new LocalMessage(this.plugin);
+		 lm.sendLocal(playername,message);
+		 
+	}
 }

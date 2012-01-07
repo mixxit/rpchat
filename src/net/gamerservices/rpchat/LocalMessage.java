@@ -40,17 +40,35 @@ public class LocalMessage implements CommandExecutor {
 			String[] arg3) {
 		// TODO Auto-generated method stub
 		String message = arrayToString(arg3," ");
-		if (message.compareTo("") == 0)
-		{
-			return false;
-		}
-		// find the player
+		
 		try 
 		{
 			Player player = parent.getServer().getPlayer(arg0.getName());
 			
-			// now that we have the player lets grab the players towny info
 			
+			if (message.compareTo("") == 0)
+			{
+				return false;
+			} else {
+				
+				sendLocal(player,message);
+				return true;
+				
+			}
+		} 
+		catch(Exception e)
+		{
+			System.out.println("[RPChatError]: " + e.getMessage());
+		}
+		
+				
+		return false;
+	}
+
+	public void sendLocal(Player player, String message) {
+		// TODO Auto-generated method stub
+		try 
+		{
 			Resident res = towny.getTownyUniverse().getResident(player.getName());
 			
 			String tag = "";
@@ -149,17 +167,13 @@ public class LocalMessage implements CommandExecutor {
 			{
 				player.sendMessage(ChatColor.GRAY + "* You speak but nobody hears you (Use worldwide /ooc <msg> instead.)");
 			}
-			
-			return true;
 		} 
 		catch (Exception e)
 		{
-			// could not find player
+			// could not find resident
 			System.out.println("[RPChat Error]: " + e.getMessage());
 
 		}
-				
-		return false;
 	}
 
 }
