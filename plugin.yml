@@ -15,7 +15,7 @@ commands:
            /<command> [msg]
            Example: /<command> Hello, people near me!
   ooc:
-    aliases: [oo]
+    aliases: [oo,oc]
     description: Speaks out of character (global to that world)
     usage: |
            /<command> [msg]
