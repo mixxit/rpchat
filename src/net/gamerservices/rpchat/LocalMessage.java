@@ -120,9 +120,9 @@ public class LocalMessage implements CommandExecutor {
 					if (p.getWorld().getName().compareTo("Redstone") == 0)
 					{
 						
-						p.sendMessage("[" + ChatColor.GOLD + nation + ChatColor.WHITE + "|" + ChatColor.AQUA + town + ChatColor.WHITE + "] "+tag+ChatColor.WHITE+"[YELL] " + player.getName() + ChatColor.YELLOW + " yells '" + message + "'");
+						p.sendMessage("[" + ChatColor.GOLD + nation + ChatColor.WHITE + "|" + ChatColor.AQUA + town + ChatColor.WHITE + "] "+tag+ChatColor.YELLOW+"[YELL] " + player.getName() + ChatColor.YELLOW + " yells '" + message + "'");
 					} else {
-						p.sendMessage("[" + ChatColor.GOLD + nation + ChatColor.WHITE + "|" + ChatColor.AQUA + town + ChatColor.WHITE + "] "+tag+ChatColor.WHITE+"[RP] " + player.getName() + ChatColor.YELLOW + " says '" + message + "'");						
+						p.sendMessage("[" + ChatColor.GOLD + nation + ChatColor.WHITE + "|" + ChatColor.AQUA + town + ChatColor.WHITE + "] "+tag+ChatColor.YELLOW+"[RP] " + player.getName() + ChatColor.YELLOW + " says '" + message + "'");						
 					}
 
 					
@@ -132,7 +132,7 @@ public class LocalMessage implements CommandExecutor {
 					if (p.getWorld().getName().compareTo("Redstone") == 0)
 					{
 						// ARE in Redstone world - do none distance based checking
-						p.sendMessage("[" + ChatColor.GOLD + nation + ChatColor.WHITE + "|" + ChatColor.AQUA + town + ChatColor.WHITE + "] "+tag+ChatColor.WHITE+"[YELL] " + player.getName() + ChatColor.YELLOW + " yells '" + message + "'");
+						p.sendMessage("[" + ChatColor.GOLD + nation + ChatColor.WHITE + "|" + ChatColor.AQUA + town + ChatColor.WHITE + "] "+tag+ChatColor.YELLOW+"[YELL] " + ChatColor.WHITE + player.getName() + ChatColor.YELLOW + " yells '" + message + "'");
 						count++;
 					} else {
 						// NOT in Redstone world - do distance based checking
@@ -155,7 +155,7 @@ public class LocalMessage implements CommandExecutor {
 		                	
 		                } else {
 		                	
-		                	p.sendMessage("[" + ChatColor.GOLD + nation + ChatColor.WHITE + "|" + ChatColor.AQUA + town + ChatColor.WHITE + "] "+tag+ChatColor.WHITE+"[RP] " + player.getName() + ChatColor.YELLOW + " says '" + message + "'");
+		                	p.sendMessage("[" + ChatColor.GOLD + nation + ChatColor.WHITE + "|" + ChatColor.AQUA + town + ChatColor.WHITE + "] "+tag+ChatColor.YELLOW+"[RP] " + ChatColor.WHITE + player.getName() + ChatColor.YELLOW + " says '" + message + "'");
 		                	count++;
 		                }
 					}
