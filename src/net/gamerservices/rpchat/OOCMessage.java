@@ -14,9 +14,10 @@ import com.palmergames.bukkit.towny.object.Resident;
 
 public class OOCMessage implements CommandExecutor {
 
-	private rpchat parent;
+
 	private Towny towny;
-	
+	private rpchat parent;
+    
 	public OOCMessage(rpchat rpchat) {
 		// TODO Auto-generated constructor stub
 		this.parent = rpchat;
@@ -60,6 +61,9 @@ public class OOCMessage implements CommandExecutor {
 				
 		return false;
 	}
+	
+	
+	
 
 	public void sendOOC(Player player, String message) {
 		// TODO Auto-generated method stub
@@ -68,7 +72,19 @@ public class OOCMessage implements CommandExecutor {
 		Resident res;
 		try {
 			res = towny.getTownyUniverse().getResident(player.getName());
+			String tag = "";
+			
+			try {
+				tag = this.parent.permission.getPrimaryGroup(player);				
+			}
+			catch (Exception e)
+			{
+				tag = "NoGroup";
+			}
+			
+			
 			String town = "";
+			
 			try 
 			{
 				town = res.getTown().getName();
@@ -97,11 +113,11 @@ public class OOCMessage implements CommandExecutor {
 				if (p.equals(player))
 				{
 					// talking to self
-					p.sendMessage("[" + ChatColor.GOLD + nation + ChatColor.WHITE + "|" + ChatColor.AQUA + town + ChatColor.WHITE + "] [OOC] " + player.getName() + ChatColor.WHITE + " " + message);
+					p.sendMessage("[" + ChatColor.GOLD + nation + ChatColor.WHITE + "|" + ChatColor.AQUA + town + ChatColor.WHITE + "] ["+tag+"][OOC] " + player.getName() + ChatColor.WHITE + ": " + message);
 				} else {
 							// not talking to self
 							// ARE in the same world and not self - no distance based checking required
-					p.sendMessage("[" + ChatColor.GOLD + nation + ChatColor.WHITE + "|" + ChatColor.AQUA + town + ChatColor.WHITE + "] [OOC] " + player.getName() + ChatColor.WHITE + " " + message);
+					p.sendMessage("[" + ChatColor.GOLD + nation + ChatColor.WHITE + "|" + ChatColor.AQUA + town + ChatColor.WHITE + "] ["+tag+"][OOC] " + player.getName() + ChatColor.WHITE + ": " + message);
 							count++;
 				}
 			}

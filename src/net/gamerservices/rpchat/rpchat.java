@@ -8,6 +8,11 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.PersistenceException;
+
+import net.milkbowl.vault.chat.Chat;
+import net.milkbowl.vault.economy.Economy;
+import net.milkbowl.vault.permission.Permission;
+
 import org.bukkit.Server;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.event.Event.Priority;
@@ -16,6 +21,7 @@ import org.bukkit.event.Event.Type;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
@@ -26,12 +32,48 @@ public class rpchat extends JavaPlugin
   private Towny towny = null;
   private Listener rpchatPlayerListener;
 	
+  public static Permission permission = null;
+  public static Economy economy = null;
+  public static Chat chat = null;
+  
   public void onDisable()
   {
 	PluginDescriptionFile desc = getDescription();
 	System.out.println(desc.getFullName() + " has been disabled");
   }
 
+
+	
+
+  private Boolean setupPermissions()
+  {
+      RegisteredServiceProvider<Permission> permissionProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.permission.Permission.class);
+      if (permissionProvider != null) {
+          permission = permissionProvider.getProvider();
+      }
+      return (permission != null);
+  }
+
+  private Boolean setupChat()
+  {
+      RegisteredServiceProvider<Chat> chatProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.chat.Chat.class);
+      if (chatProvider != null) {
+          chat = chatProvider.getProvider();
+      }
+
+      return (chat != null);
+  }
+
+  private Boolean setupEconomy()
+  {
+      RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
+      if (economyProvider != null) {
+          economy = economyProvider.getProvider();
+      }
+
+      return (economy != null);
+  }
+  
   public void onEnable()
   {
 	PluginDescriptionFile desc = getDescription();
