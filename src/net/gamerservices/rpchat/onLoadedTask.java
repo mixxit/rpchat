@@ -1,19 +1,21 @@
-package net.gamerservices.rpchat;
+/*   */ package net.gamerservices.rpchat;
+/*   */ 
+/*   */ public class onLoadedTask
+/*   */   implements Runnable
+/*   */ {
+/*   */   private rpchat rpchat;
+/*   */ 
+/*   */   public onLoadedTask(rpchat rpchat)
+/*   */   {
+/* 9 */     this.rpchat = rpchat;
+/*   */   }
+/*   */ 
+/*   */   public void run()
+/*   */   {
+/*   */   }
+/*   */ }
 
-public class onLoadedTask implements Runnable {
-
-	private rpchat rpchat;
-	
-	public onLoadedTask(rpchat rpchat) {
-		// TODO Auto-generated constructor stub
-		this.rpchat = rpchat;
-	}
-	
-
-	@Override
-	public void run() {
-		// TODO Auto-generated method stub
-
-	}
-
-}
+/* Location:           C:\Documents and Settings\end\Desktop\rpchatlite.jar
+ * Qualified Name:     net.gamerservices.rpchat.onLoadedTask
+ * JD-Core Version:    0.6.0
+ */

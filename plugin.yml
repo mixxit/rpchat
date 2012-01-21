@@ -1,6 +1,6 @@
 name: rpchat
 main: net.gamerservices.rpchat.rpchat
-version: 0.02
+version: 0.05
 website: http://www.gamerservices.net
 author: Mixxit
 database: true
@@ -8,15 +8,57 @@ description: >
              Basic localised chat functionality.
              This plugin allows a player to chat locally
 commands:
+  race:
+    aliases: [setrace]
+    description: Sets your current race
+    usage: |
+           /<command> [race]
+           Example: /<command> Human
+  sector:
+    aliases: [sec]
+    description: Gets the territory information
+    usage: |
+           /<command>
+           Example: /<command> 
+  metatron:
+    aliases: [metatron]
+    description: Summon the metatron
+    usage: |
+           /<command> [message]
+           Example: /<command> my message
   local:
     aliases: [l]
     description: Speaks locally
     usage: |
            /<command> [msg]
            Example: /<command> Hello, people near me!
+  dropship:
+    aliases: [ds]
+    description: Drop ships you to enemy territory
+    usage: |
+           /<command> [ID]
+           Example: /<command> 123121
   ooc:
     aliases: [oo,oc]
     description: Speaks out of character (global to that world)
     usage: |
            /<command> [msg]
            Example: /<command> Hello, people in this world!
+  townchat:
+    aliases: [tc]
+    description: Speaks to your town
+    usage: |
+           /<command> [msg]
+           Example: /<command> Hello, townies!
+  racechat:
+    aliases: [rc]
+    description: Speaks to your race
+    usage: |
+           /<command> [msg]
+           Example: /<command> Hello, fellow species!
+  global:
+    aliases: [g]
+    description: Speaks out of character (global to the whole server)
+    usage: |
+           /<command> [msg]
+           Example: /<command> Hello, people in this server!
