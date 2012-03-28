@@ -25,8 +25,8 @@
 /*     */ import org.bukkit.command.PluginCommand;
 		  import org.bukkit.event.*;
 /*     */ import org.bukkit.entity.Player;
-/*     */ import org.bukkit.event.Event.Priority;
-/*     */ import org.bukkit.event.Event.Type;
+/*     */ import org.bukkit.event.EventPriority;
+/*     */ import org.bukkit.event.Event;
 /*     */ import org.bukkit.event.Listener;
 /*     */ import org.bukkit.plugin.Plugin;
 /*     */ import org.bukkit.plugin.PluginDescriptionFile;
@@ -84,26 +84,6 @@
 /*     */ 
 /*     */   public String getGroups(Player player)
 /*     */   {
-/* 102 */     if (player.getName().toLowerCase().equals("Tuppinator".toLowerCase()))
-/*     */     {
-/* 104 */       return ChatColor.DARK_RED + "General" + ChatColor.WHITE;
-/*     */     }
-/*     */ 
-/* 107 */     if (player.getName().toLowerCase().equals("Nas_The_Creator".toLowerCase()))
-/*     */     {
-/* 109 */       return ChatColor.RED + "Colonel" + ChatColor.WHITE;
-/*     */     }
-/*     */ 
-/* 112 */     if (player.getName().toLowerCase().equals("Richkilla".toLowerCase()))
-/*     */     {
-/* 114 */       return ChatColor.RED + "Colonel" + ChatColor.WHITE;
-/*     */     }
-/*     */ 
-/* 117 */     if (player.getName().toLowerCase().equals("Siliputi".toLowerCase()))
-/*     */     {
-/* 119 */       return ChatColor.RED + "Colonel" + ChatColor.WHITE;
-/*     */     }
-/*     */ 
 /* 123 */     if (player.getName().toLowerCase().equals("mixxit".toLowerCase()))
 /*     */     {
 /* 125 */       if (player.isOp())
@@ -182,12 +162,12 @@
 /* 198 */       return ChatColor.GRAY + "Citizen" + ChatColor.WHITE;
 /*     */     }
 /*     */ 
-/* 201 */     if (hasPerm(player, "permissions.tag.refugee"))
+/* 201 */     if (hasPerm(player, "permissions.tag.nomad"))
 /*     */     {
-/* 203 */       return ChatColor.WHITE + "Refugee" + ChatColor.WHITE;
+/* 203 */       return ChatColor.WHITE + "Nomad" + ChatColor.WHITE;
 /*     */     }
 /*     */ 
-/* 206 */     return "Refugee";
+/* 206 */     return "Nomad";
 /*     */   }
 /*     */ 
 /*     */   public String formatString(String string) {
@@ -222,18 +202,16 @@
 /* 249 */     getCommand("racechat").setExecutor(new RaceMessage(this));
 /* 250 */     getCommand("race").setExecutor(new SetRace(this));
 /* 251 */     getCommand("metatron").setExecutor(new MetatronMessage(this));
-/* 252 */     getCommand("dropship").setExecutor(new Dropship(this));
-/* 253 */     getCommand("sector").setExecutor(new Sector(this));
 /* 254 */     registerEvents();
 /*     */   }
 /*     */ 
 /*     */   public void registerEvents()
 /*     */   {
-/* 259 */     this.rpchatPlayerListener = new RPchatPlayerListener(this);
-/* 260 */     this.pm.registerEvent(Event.Type.PLAYER_CHAT, this.rpchatPlayerListener, Event.Priority.Monitor, this);
-/* 261 */     this.pm.registerEvent(Event.Type.PLAYER_JOIN, this.rpchatPlayerListener, Event.Priority.Highest, this);
-/* 262 */     this.rpchatEntityListener = new RPchatEntityListener(this);
-/* 263 */     this.pm.registerEvent(Event.Type.ENTITY_DAMAGE, this.rpchatEntityListener, Event.Priority.Normal, this);
+			  this.rpchatPlayerListener = new RPchatPlayerListener(this);
+			  this.rpchatEntityListener = new RPchatEntityListener(this);
+			  getServer().getPluginManager().registerEvents(this.rpchatPlayerListener, this);
+			  getServer().getPluginManager().registerEvents(this.rpchatEntityListener, this);
+
 /*     */   }
 /*     */ 
 /*     */   public void sendMessageToAll(String message)
@@ -307,8 +285,6 @@
 /*     */     try
 /*     */     {
 /* 345 */       getDatabase().find(sqlPlayer.class).findRowCount();
-/* 346 */       getDatabase().find(sqlSector.class).findRowCount();
-/* 347 */       getDatabase().find(sqlDropships.class).findRowCount();
 /* 348 */       getDatabase().find(sqlRaces.class).findRowCount();
 /*     */     }
 /*     */     catch (PersistenceException ex) {
@@ -338,110 +314,10 @@
 /*     */   {
 /* 379 */     List list = new ArrayList();
 /* 380 */     list.add(sqlPlayer.class);
-/* 381 */     list.add(sqlSector.class);
-/* 382 */     list.add(sqlDropships.class);
 /* 383 */     list.add(sqlRaces.class);
 /* 384 */     return list;
 /*     */   }
-/*     */ 
-/*     */   public void addSectorKill(String sector, String attackerrace)
-/*     */   {
-/*     */     try
-/*     */     {
-/* 391 */       sqlSector sSector = (sqlSector)getDatabase().find(sqlSector.class).where().ieq("name", sector).findUnique();
-/* 392 */       if (sSector == null) {
-/* 393 */         sSector = new sqlSector();
-/* 394 */         sSector.setName(sector);
-/*     */       }
-/*     */ 
-/* 397 */       if (attackerrace.equals("human"))
-/* 398 */         sSector.setHuman(sSector.getHuman() + 1);
-/* 399 */       if (attackerrace.equals("chelok"))
-/* 400 */         sSector.setChelok(sSector.getChelok() + 1);
-/* 401 */       if (attackerrace.equals("vishim"))
-/* 402 */         sSector.setVishim(sSector.getVishim() + 1);
-/* 403 */       if (attackerrace.equals("chaotic"))
-/* 404 */         sSector.setChaotic(sSector.getChaotic() + 1);
-/* 405 */       if (attackerrace.equals("terrix"))
-/* 406 */         sSector.setTerrix(sSector.getTerrix() + 1);
-/* 407 */       if (attackerrace.equals("cybran"))
-/* 408 */         sSector.setCybran(sSector.getCybran() + 1);
-/* 409 */       if (attackerrace.equals("gray"))
-/* 410 */         sSector.setGray(sSector.getGray() + 1);
-/* 411 */       if (attackerrace.equals("sylik"))
-/* 412 */         sSector.setSylik(sSector.getSylik() + 1);
-/* 413 */       if (attackerrace.equals("mysmaal"))
-/* 414 */         sSector.setMysmaal(sSector.getMysmaal() + 1);
-/* 415 */       if (attackerrace.equals("triume"))
-/* 416 */         sSector.setTriume(sSector.getTriume() + 1);
-/* 417 */       if (attackerrace.equals("draconic")) {
-/* 418 */         sSector.setDraconic(sSector.getDraconic() + 1);
-/*     */       }
-/*     */ 
-/* 421 */       getDatabase().save(sSector);
-/*     */     }
-/*     */     catch (Exception e)
-/*     */     {
-/* 425 */       System.out.println("[RPchatError] " + e.getMessage());
-/*     */     }
-/*     */   }
-/*     */ 
-/*     */   public String getSectorDominator(String sector)
-/*     */   {
-/* 432 */     String dominator = "none";
-/*     */     try
-/*     */     {
-/* 436 */       sqlSector sSector = (sqlSector)getDatabase().find(sqlSector.class).where().ieq("name", sector).findUnique();
-/* 437 */       if (sSector == null) {
-/* 438 */         sSector = new sqlSector();
-/* 439 */         sSector.setName(sector);
-/*     */ 
-/* 441 */         getDatabase().save(sSector);
-/*     */       }
-/*     */ 
-/* 446 */       Map map = new HashMap();
-/* 447 */       map.put("human", Integer.valueOf(sSector.getHuman()));
-/* 448 */       map.put("vishim", Integer.valueOf(sSector.getVishim()));
-/* 449 */       map.put("chaotic", Integer.valueOf(sSector.getChaotic()));
-/* 450 */       map.put("terrix", Integer.valueOf(sSector.getTerrix()));
-/* 451 */       map.put("cybran", Integer.valueOf(sSector.getCybran()));
-/* 452 */       map.put("gray", Integer.valueOf(sSector.getGray()));
-/* 453 */       map.put("sylik", Integer.valueOf(sSector.getSylik()));
-/* 454 */       map.put("mysmaal", Integer.valueOf(sSector.getMysmaal()));
-/* 455 */       map.put("triume", Integer.valueOf(sSector.getTriume()));
-/* 456 */       map.put("draconic", Integer.valueOf(sSector.getDraconic()));
-/*     */ 
-/* 459 */       Set s = map.entrySet();
-/*     */ 
-/* 462 */       Iterator it = s.iterator();
-/*     */ 
-/* 464 */       String highestrace = "none";
-/* 465 */       Integer highestvalue = Integer.valueOf(0);
-/*     */ 
-/* 467 */       while (it.hasNext())
-/*     */       {
-/* 471 */         Map.Entry m = (Map.Entry)it.next();
-/*     */ 
-/* 474 */         String key = (String)m.getKey();
-/*     */ 
-/* 477 */         Integer value = (Integer)m.getValue();
-/* 478 */         if (value.intValue() <= highestvalue.intValue())
-/*     */           continue;
-/* 480 */         highestrace = key;
-/* 481 */         highestvalue = value;
-/*     */       }
-/*     */ 
-/* 485 */       dominator = highestrace;
-/*     */     }
-/*     */     catch (Exception e)
-/*     */     {
-/* 490 */       System.out.println("[RPchatError] " + e.getMessage());
-/* 491 */       dominator = "none";
-/*     */     }
-/*     */ 
-/* 494 */     return dominator;
-/*     */   }
-/*     */ 
+
 /*     */   public void sendMessageToRace(String race, String message)
 /*     */   {
 /* 499 */     for (World w : getServer().getWorlds())
@@ -454,38 +330,7 @@
 /*     */       }
 /*     */     }
 /*     */   }
-/*     */ 
-/*     */   public String addDropship(String world, double x, double y, double z)
-/*     */   {
-/*     */     try
-/*     */     {
-/* 518 */       sqlDropships sDropship = new sqlDropships();
-/* 519 */       String x1 = Double.toString(x);
-/* 520 */       String y1 = Double.toString(y);
-/* 521 */       String z1 = Double.toString(z);
-/* 522 */       Date now = new Date();
-/* 523 */       Long time26now = Long.valueOf(now.getTime());
-/* 524 */       String timenow = Long.toString(now.getTime());
-/*     */ 
-/* 526 */       sDropship.setName(timenow);
-/* 527 */       sDropship.setWorld(world);
-/*     */ 
-/* 529 */       sDropship.setX(x1);
-/* 530 */       sDropship.setY(y1);
-/* 531 */       sDropship.setZ(z1);
-/*     */ 
-/* 533 */       getDatabase().save(sDropship);
-/*     */ 
-/* 537 */       return encode(time26now.longValue());
-/*     */     }
-/*     */     catch (Exception e)
-/*     */     {
-/* 542 */       System.out.println("[rpchat] Exception: " + e.getMessage());
-/*     */     }
-/*     */ 
-/* 546 */     return null;
-/*     */   }
-/*     */ 
+
 /*     */   public static String encode(long number) {
 /* 550 */     StringBuilder b = new StringBuilder();
 /* 551 */     assert (number > 0L);
@@ -539,15 +384,7 @@
 /*     */       }
 /*     */     }
 /*     */   }
-/*     */ 
-/*     */   public String getSectorName(Location location)
-/*     */   {
-/* 614 */     String World = location.getWorld().getName();
-/* 615 */     String ChunkX = Integer.toString(location.getChunk().getX());
-/* 616 */     String ChunkZ = Integer.toString(location.getChunk().getZ());
-/* 617 */     return World + ":" + ChunkX + "," + ChunkZ;
-/*     */   }
-/*     */ }
+	}
 
 /* Location:           C:\Documents and Settings\end\Desktop\rpchatlite.jar
  * Qualified Name:     net.gamerservices.rpchat.rpchat

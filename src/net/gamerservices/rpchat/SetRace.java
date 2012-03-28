@@ -39,7 +39,6 @@
 /*    */ 
 /* 44 */     if (args.length == 0) {
 /* 45 */       player.sendMessage(ChatColor.LIGHT_PURPLE + "Your current race is: " + sPlayer.getRace());
-/* 46 */       player.sendMessage(ChatColor.LIGHT_PURPLE + "For more race information see: http://goliathcraft.wikia.com/wiki/Races");
 /* 47 */       player.sendMessage(ChatColor.LIGHT_PURPLE + "To set a new race use the: '/race Racename' command");
 /* 48 */       player.sendMessage(ChatColor.LIGHT_PURPLE + "For a list of races use: '/race list' command");
 /*    */ 
@@ -48,7 +47,8 @@
 /*    */ 
 /* 54 */     int matchcount = 0;
 /* 55 */     String targetrace = args[0].toLowerCase();
-/* 56 */     String[] races = { "human", "chelok", "vishim", "chaotic", "terrix", "cybran", "gray", "sylik", "mysmaal", "triume", "draconic" };
+			 System.out.println("Target race for client ("+player.getName()+"): " + targetrace);
+/* 56 */     String[] races = { "human", "highelf", "woodelf", "halfelf", "darkelf", "vampire", "barbarian", "orc", "ogre", "troll", "halfDragon", "gnome", "goblin", "hobbit", "highHuman", "undead", "dwarf", "ratman", "lizardman", "elemental", "kobold", "angel", "fallenangel" };
 /* 57 */     for (String rs : races)
 /*    */     {
 /* 59 */       if (!rs.equals(targetrace))
@@ -64,7 +64,7 @@
 /*    */       {
 /* 70 */         racelist = racelist + r + ",";
 /*    */       }
-/* 72 */       player.sendMessage(ChatColor.RED + "Valid races are: human (tech human) chelok (tribal human) vishim (elf) chaotic (undead) terrix (swarm hive) cybran (cyborg) gray (alien) sylik (snake godslayer) mysmaal (vampire) triume (spirit/angel) draconic (half dragon)");
+/* 72 */       player.sendMessage(ChatColor.RED + "Human, HighElf, WoodElf, HalfElf, DarkElf, Vampire, Barbarian, Orc, Ogre, Troll, HalfDragon, Gnome, Goblin, Hobbit, HighHuman, Undead, Dwarf, Ratman, Lizardman, Elemental, Koboldm, Angel, FallenAngel");
 /* 73 */       return false;
 /*    */     }
 /*    */ 

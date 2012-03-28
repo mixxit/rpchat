@@ -5,14 +5,18 @@
 /*    */ import com.avaje.ebean.Query;
 /*    */ import org.bukkit.ChatColor;
 /*    */ import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 /*    */ import org.bukkit.event.player.PlayerChatEvent;
-/*    */ import org.bukkit.event.player.PlayerJoinEvent;
-/*    */ import org.bukkit.event.player.PlayerListener;
+import org.bukkit.event.player.PlayerJoinEvent;
+
 /*    */ 
-/*    */ public class RPchatPlayerListener extends PlayerListener
+/*    */ public class RPchatPlayerListener implements Listener
 /*    */ {
 /*    */   private rpchat plugin;
 /*    */ 
+		   @EventHandler(priority = EventPriority.HIGHEST)
 /*    */   public void onPlayerJoin(PlayerJoinEvent event)
 /*    */   {
 /* 19 */     sqlPlayer sPlayer = (sqlPlayer)this.plugin.getDatabase().find(sqlPlayer.class).where().ieq("name", event.getPlayer().getName()).findUnique();
@@ -39,7 +43,7 @@
 /*    */   {
 /* 44 */     this.plugin = rpchat;
 /*    */   }
-/*    */ 
+/*    */   @EventHandler(priority = EventPriority.MONITOR)
 /*    */   public void onPlayerChat(PlayerChatEvent event)
 /*    */   {
 /* 50 */     DoGlobalMessage(event.getPlayer(), event.getMessage());
