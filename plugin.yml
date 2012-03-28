@@ -1,6 +1,6 @@
 name: rpchat
 main: net.gamerservices.rpchat.rpchat
-version: 0.05
+version: 0.06
 website: http://www.gamerservices.net
 author: Mixxit
 database: true

@@ -46,7 +46,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 /*    */   @EventHandler(priority = EventPriority.MONITOR)
 /*    */   public void onPlayerChat(PlayerChatEvent event)
 /*    */   {
-/* 50 */     DoGlobalMessage(event.getPlayer(), event.getMessage());
+/* 50 */     DoLocalMessage(event.getPlayer(), event.getMessage());
 /* 51 */     event.setCancelled(true);
 /*    */   }
 /*    */ 
