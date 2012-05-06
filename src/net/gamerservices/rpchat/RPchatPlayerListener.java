@@ -1,75 +1,141 @@
-/*    */ package net.gamerservices.rpchat;
-/*    */ 
-/*    */ import com.avaje.ebean.EbeanServer;
-/*    */ import com.avaje.ebean.ExpressionList;
-/*    */ import com.avaje.ebean.Query;
-/*    */ import org.bukkit.ChatColor;
-/*    */ import org.bukkit.entity.Player;
+ package net.gamerservices.rpchat;
+ 
+ import com.avaje.ebean.EbeanServer;
+ import com.avaje.ebean.ExpressionList;
+ import com.avaje.ebean.Query;
+ import org.bukkit.ChatColor;
+ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-/*    */ import org.bukkit.event.player.PlayerChatEvent;
+ import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 
-/*    */ 
-/*    */ public class RPchatPlayerListener implements Listener
-/*    */ {
-/*    */   private rpchat plugin;
-/*    */ 
+ 
+ public class RPchatPlayerListener implements Listener
+ {
+   private rpchat plugin;
+ 
 		   @EventHandler(priority = EventPriority.HIGHEST)
-/*    */   public void onPlayerJoin(PlayerJoinEvent event)
-/*    */   {
-/* 19 */     sqlPlayer sPlayer = (sqlPlayer)this.plugin.getDatabase().find(sqlPlayer.class).where().ieq("name", event.getPlayer().getName()).findUnique();
-/* 20 */     if (sPlayer == null) {
-/* 21 */       sPlayer = new sqlPlayer();
-/* 22 */       sPlayer.setName(event.getPlayer().getName());
-/*    */ 
-/* 24 */       sPlayer.setDisplay(event.getPlayer().getName());
-/* 25 */       sPlayer.setRace("human");
-/* 26 */       sPlayer.setLanguage("human");
-/*    */ 
-/* 29 */       this.plugin.getDatabase().save(sPlayer);
-/*    */     }
-/*    */ 
-/* 33 */     if (!sPlayer.getFlags().equals("done"))
-/*    */     {
-/* 35 */       event.getPlayer().sendMessage(ChatColor.RED + "*********************************************************");
-/* 36 */       event.getPlayer().sendMessage(ChatColor.RED + "You currently have NO race set - use /race to set one");
-/* 37 */       event.getPlayer().sendMessage(ChatColor.RED + "*********************************************************");
-/*    */     }
-/*    */   }
-/*    */ 
-/*    */   public RPchatPlayerListener(rpchat rpchat)
-/*    */   {
-/* 44 */     this.plugin = rpchat;
-/*    */   }
-/*    */   @EventHandler(priority = EventPriority.MONITOR)
-/*    */   public void onPlayerChat(PlayerChatEvent event)
-/*    */   {
-/* 50 */     DoLocalMessage(event.getPlayer(), event.getMessage());
-/* 51 */     event.setCancelled(true);
-/*    */   }
-/*    */ 
-/*    */   public void DoGlobalMessage(Player playername, String message)
-/*    */   {
-/* 57 */     GlobalMessage gm = new GlobalMessage(this.plugin);
-/* 58 */     gm.sendGlobal(playername, message);
-/*    */   }
-/*    */ 
-/*    */   public void DoOOCMessage(Player playername, String message)
-/*    */   {
-/* 64 */     OOCMessage ooc = new OOCMessage(this.plugin);
-/* 65 */     ooc.sendOOC(playername, message);
-/*    */   }
-/*    */ 
-/*    */   public void DoLocalMessage(Player playername, String message)
-/*    */   {
-/* 71 */     LocalMessage lm = new LocalMessage(this.plugin);
-/* 72 */     lm.sendLocal(playername, message);
-/*    */   }
-/*    */ }
+   public void onPlayerJoin(PlayerJoinEvent event)
+   {
+     sqlPlayer sPlayer = (sqlPlayer)this.plugin.getDatabase().find(sqlPlayer.class).where().ieq("name", event.getPlayer().getName()).findUnique();
+     if (sPlayer == null) {
+       sPlayer = new sqlPlayer();
+       sPlayer.setName(event.getPlayer().getName());
+ 
+       sPlayer.setDisplay(event.getPlayer().getName());
+       sPlayer.setRace("human");
+       sPlayer.setLanguage("human");
+ 
+       this.plugin.getDatabase().save(sPlayer);
+     }
+ 
+     if (!sPlayer.getFlags().equals("done"))
+     {
+       event.getPlayer().sendMessage(ChatColor.RED + "*********************************************************");
+       event.getPlayer().sendMessage(ChatColor.RED + "You currently have NO race set - use /race to set one");
+       event.getPlayer().sendMessage(ChatColor.RED + "*********************************************************");
+     }
 
-/* Location:           C:\Documents and Settings\end\Desktop\rpchatlite.jar
- * Qualified Name:     net.gamerservices.rpchat.RPchatPlayerListener
- * JD-Core Version:    0.6.0
- */
+			 event.getPlayer().setDisplayName(sPlayer.getDisplay());
+   }
+ 
+   public RPchatPlayerListener(rpchat rpchat)
+   {
+     this.plugin = rpchat;
+   }
+   @EventHandler(priority = EventPriority.MONITOR)
+   public void onPlayerChat(PlayerChatEvent event)
+   {
+	   DoMessageToChannel(event.getPlayer(), event.getMessage());
+	   event.setCancelled(true);
+   }
+ 
+   private void DoMessageToChannel(Player player, String message) {
+	
+	
+	   sqlPlayer sPlayer = (sqlPlayer)this.plugin.getDatabase().find(sqlPlayer.class).where().ieq("name", player.getName()).findUnique();
+	   if (sPlayer == null) {
+		   
+		   DoGlobalMessage(player, message);
+	   } else {
+		   if (sPlayer.getChatfocus().equals(""))
+		   {
+			   
+			   DoGlobalMessage(player, message);
+			   
+		   }
+		   
+		   if (sPlayer.getChatfocus().equals("local"))
+		   {
+			   
+			   DoLocalMessage(player, message);
+			   
+		   }
+		   
+		   if (sPlayer.getChatfocus().equals("global"))
+		   {
+			   
+			   DoGlobalMessage(player, message);
+			   
+		   }
+		   
+		   if (sPlayer.getChatfocus().equals("town"))
+		   {
+			   
+			   DoTownMessage(player, message);
+			   
+		   }
+		   
+		   if (sPlayer.getChatfocus().equals("ooc"))
+		   {
+			   
+			   DoOOCMessage(player, message);
+			   
+		   }
+		   
+		   if (sPlayer.getChatfocus().equals("race"))
+		   {
+			   
+			   DoRaceMessage(player, message);
+			   
+		   }
+		   
+	   }
+	   
+	   
+
+}
+
+private void DoTownMessage(Player playername, String message) {
+	
+	TownMessage tm = new TownMessage(this.plugin);
+	tm.sendTownChat(playername, message);
+}
+
+private void DoRaceMessage(Player playername, String message) {
+	
+	RaceMessage rm = new RaceMessage(this.plugin);
+	rm.sendRaceChat(playername, message);
+}
+
+public void DoGlobalMessage(Player playername, String message)
+   {
+		GlobalMessage gm = new GlobalMessage(this.plugin);
+		gm.sendGlobal(playername, message);
+   }
+ 
+   public void DoOOCMessage(Player playername, String message)
+   {
+     OOCMessage ooc = new OOCMessage(this.plugin);
+     ooc.sendOOC(playername, message);
+   }
+ 
+   public void DoLocalMessage(Player playername, String message)
+   {
+     LocalMessage lm = new LocalMessage(this.plugin);
+     lm.sendLocal(playername, message);
+   }
+ }
+

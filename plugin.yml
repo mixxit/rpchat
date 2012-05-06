@@ -1,7 +1,7 @@
 name: rpchat
 main: net.gamerservices.rpchat.rpchat
-version: 0.06
-website: http://www.gamerservices.net
+version: 0.08
+website: http://www.fallofanempire.com
 author: Mixxit
 database: true
 description: >
@@ -20,6 +20,13 @@ commands:
     usage: |
            /<command> [message]
            Example: /<command> my message
+  defaultchannel:
+    aliases: [ch]
+    description: Sets your default chat channel
+    usage: |
+           /<command> [channel]
+           Example: /<command> local
+           Valid Channel names: local,global,race,town,ooc 
   local:
     aliases: [l]
     description: Speaks locally
@@ -44,6 +51,55 @@ commands:
     usage: |
            /<command> [msg]
            Example: /<command> Hello, fellow species!
+  name:
+    aliases: [nick]
+    description: Sets your name
+    usage: |
+           /<command> [newname]
+           Example: /<command> Deborah
+           
+  lastname:
+    aliases: [lastname]
+    description: Sets your lastname
+    usage: |
+           /<command> [newlastname]
+           Example: /<command> Smith
+  findname:
+    aliases: [find]
+    description: Finds a players minecraft name
+    usage: |
+           /<command> [displayname]
+           Example: /<command> Deborah
+  vote:
+    aliases: [votebymcname]
+    description: Votes by a minecraft name - to find a minecraft name use /findname Fakenamehere
+    usage: |
+           /<command> [minecraftname]
+           Example: /<command> Deborahz
+  doelection:
+    aliases: [doelection]
+    description: Sets yourself for election
+    usage: |
+           /<command>
+           Example: /<command>
+  title:
+    aliases: [settitle]
+    description: Sets a title for you or someone else
+    usage: |
+           /<command>
+           Example: /<command> [mcaccountname] [title]
+  setcapital:
+    aliases: [scap]
+    description: Sets the capital location to your position
+    usage: |
+           /<command>
+           Example: /<command>
+  capital:
+    aliases: [cap]
+    description: Teleports you to your capital
+    usage: |
+           /<command>
+           Example: /<command>
   global:
     aliases: [g]
     description: Speaks out of character (global to the whole server)
