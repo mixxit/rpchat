@@ -33,6 +33,12 @@ commands:
     usage: |
            /<command> [msg]
            Example: /<command> Hello, people near me!
+  emote:
+    aliases: [e]
+    description: Emotes locally
+    usage: |
+           /<command> [msg]
+           Example: /<command> stops to examine the ground           
   ooc:
     aliases: [oo,oc]
     description: Speaks out of character (global to that world)

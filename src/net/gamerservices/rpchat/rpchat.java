@@ -205,7 +205,8 @@ public class rpchat extends JavaPlugin
 	 getCommand("capital").setExecutor(new GotoCapital(this));
 	 getCommand("alliancechat").setExecutor(new AllianceMessage(this));
 	 getCommand("title").setExecutor(new SetTitle(this));
-     registerEvents();
+	 getCommand("emote").setExecutor(new EmoteMessage(this));
+	 registerEvents();
   }
 
   public void registerEvents()
