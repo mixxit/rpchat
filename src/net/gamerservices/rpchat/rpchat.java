@@ -57,32 +57,16 @@ public class rpchat extends JavaPlugin
      if (permission != null) return Boolean.valueOf(true); return Boolean.valueOf(false);
   }
 
-  public String getRaceNameShorthand(String race)
+  public String getAllianceNameShorthand(String race)
   {
-	  if (race.equals("human")) { return "hum"; } 
-	  if (race.equals("highelf")) { return "hef"; } 
-	  if (race.equals("woodelf")) { return "wef"; } 
-	  if (race.equals("halfelf")) { return "hfe"; } 
-	  if (race.equals("darkelf")) { return "drk"; } 
-	  if (race.equals("vampire")) { return "vpr"; } 
-	  if (race.equals("barbarian")) { return "bar"; } 
-	  if (race.equals("orc")) { return "orc"; } 
-	  if (race.equals("ogre")) { return "ogr"; } 
-	  if (race.equals("troll")) { return "trl"; } 
-	  if (race.equals("halfdragon")) { return "hdr"; } 
-	  if (race.equals("gnome")) { return "gnm"; } 
-	  if (race.equals("goblin")) { return "gob"; } 
-	  if (race.equals("hobbit")) { return "hob"; } 
-	  if (race.equals("highhuman")) { return "hhm"; } 
-	  if (race.equals("undead")) { return "und"; } 
-	  if (race.equals("dwarf")) { return "dwf"; } 
-	  if (race.equals("ratman")) { return "rat"; } 
-	  if (race.equals("lizardman")) { return "liz"; } 
-	  if (race.equals("elemental")) { return "ele"; } 
-	  if (race.equals("kobold")) { return "kob"; } 
-	  if (race.equals("angel")) { return "ang"; } 
-	  if (race.equals("fallenangel")) { return "fal"; }
-	  
+	  if (race.equals("combine")) { return "cmb"; } 
+	  if (race.equals("collective")) { return "col"; } 
+	  if (race.equals("realm")) { return "rlm"; } 
+	  if (race.equals("dominion")) { return "dom"; } 
+	  if (race.equals("legacy")) { return "lgc"; } 
+	  if (race.equals("legion")) { return "lgn"; } 
+	  if (race.equals("foresworn")) { return "fsw"; } 
+	  if (race.equals("forsaken")) { return "fsk"; } 	  
 	  return "unk";
   }
   
@@ -219,6 +203,7 @@ public class rpchat extends JavaPlugin
 	 getCommand("defaultchannel").setExecutor(new SetDefaultChannel(this));
 	 getCommand("setcapital").setExecutor(new SetCapital(this));
 	 getCommand("capital").setExecutor(new GotoCapital(this));
+	 getCommand("alliancechat").setExecutor(new AllianceMessage(this));
 	 getCommand("title").setExecutor(new SetTitle(this));
      registerEvents();
   }
@@ -307,6 +292,7 @@ public class rpchat extends JavaPlugin
     {
        getDatabase().find(sqlPlayer.class).findRowCount();
        getDatabase().find(sqlRaces.class).findRowCount();
+       getDatabase().find(sqlAlliances.class).findRowCount();
     }
     catch (PersistenceException ex) {
        System.out.println("Installing database for " + getDescription().getName() + " due to first time usage");
@@ -315,6 +301,22 @@ public class rpchat extends JavaPlugin
     }
   }
 
+  public String getPlayerAlliance(Player player)
+  {
+    try
+    {
+       sqlPlayer sPlayer = (sqlPlayer)getDatabase().find(sqlPlayer.class).where().ieq("name", player.getName()).findUnique();
+       if (sPlayer == null) {
+        return "Unknown";
+      }
+       return sPlayer.getAlliance();
+    }
+    catch (Exception e)
+    {
+       System.out.println("[rpchat] Exception: " + e.getMessage());
+     }return "Unknown";
+  }
+  
   public String getPlayerRace(Player player)
   {
     try
@@ -336,6 +338,7 @@ public class rpchat extends JavaPlugin
      List list = new ArrayList();
      list.add(sqlPlayer.class);
      list.add(sqlRaces.class);
+     list.add(sqlAlliances.class);
      return list;
   }
 
@@ -378,7 +381,7 @@ public class rpchat extends JavaPlugin
      return answer;
   }
 
-  public void sendMessageToRaceExcept(Player victim, String victimrace, String string)
+  public void sendMessageToAllianceExcept(Player victim, String victimalliance, String string)
   {
      for (World w : getServer().getWorlds())
     {
@@ -386,7 +389,7 @@ public class rpchat extends JavaPlugin
       {
          if (p.equals(victim))
           continue;
-         if (!getPlayerRace(p).equals(victimrace))
+         if (!getPlayerAlliance(p).equals(victimalliance))
           continue;
          p.sendMessage(string);
       }
@@ -463,7 +466,7 @@ public class rpchat extends JavaPlugin
 		return ChatColor.GREEN + player.getName() + ChatColor.WHITE;
 	}
 	
-	private int getVoteCount(String name)
+	public int getVoteCount(String name)
 	{
 		List<sqlPlayer> players = getDatabase().find(sqlPlayer.class).where().ieq("vote", name).findList();
 		int count = 0;
@@ -473,7 +476,7 @@ public class rpchat extends JavaPlugin
 		return count;
 	}
 	
-	private String getRaceStewardName(String racename)
+	private String getAllianceStewardName(String alliancename)
 	{
 		
 		String leadername = "none";
@@ -481,7 +484,7 @@ public class rpchat extends JavaPlugin
 		String highestleadername = "";
 		int highestleadercount = 0;
 		for (sqlPlayer p : players){
-			if (p.getRace().equals(racename))
+			if (p.getAlliance().equals(alliancename))
 			{
 				int curplayersvotecount = getVoteCount(p.getName().toLowerCase());
 				if (curplayersvotecount > highestleadercount)
@@ -529,7 +532,7 @@ public class rpchat extends JavaPlugin
 		
 		if (sPlayerme.getElection() == 1)
 		{
-			if (getRaceStewardName(sPlayerme.getRace()).equals(player.getName().toLowerCase()))
+			if (getAllianceStewardName(sPlayerme.getAlliance()).equals(player.getName().toLowerCase()))
 			{
 				return true;
 			}
@@ -596,13 +599,12 @@ public class rpchat extends JavaPlugin
 			fromplayer.sendMessage("You cannot set a title that is longer than 32 characters");
 			return;
 		}
-		
+				
 		if (!onlylettersorspace(title))
 		{
 			fromplayer.sendMessage("A title can only contain letters and spaces");
 			return;
 		}
-		
 		
 		if (fromplayer.isOp())
 		{
@@ -611,10 +613,18 @@ public class rpchat extends JavaPlugin
 				fromplayer.sendMessage("You cannot grant a title when your targets account is being updated.");
 				return;
 			} else {
-				sPlayerthem.setTitle(title);
-				this.getDatabase().save(sPlayerthem);
-				fromplayer.sendMessage("Title set for player");
-				return;
+				if (title.equals("clear"))
+				{
+					sPlayerthem.setTitle("");
+					this.getDatabase().save(sPlayerthem);
+					fromplayer.sendMessage("Title cleared for player");
+					return;
+				} else {						
+					sPlayerthem.setTitle(title);
+					this.getDatabase().save(sPlayerthem);
+					fromplayer.sendMessage("Title set for player");
+					return;
+				}
 			}
 		}
 		
@@ -631,12 +641,20 @@ public class rpchat extends JavaPlugin
 					fromplayer.sendMessage("You cannot grant a title when your targets account is being updated.");
 					return;
 				} else {
-					if (sPlayerme.getRace().equals(sPlayerthem.getRace()))
+					if (sPlayerme.getAlliance().equals(sPlayerthem.getAlliance()))
 					{
-						sPlayerthem.setTitle(title);
-						this.getDatabase().save(sPlayerthem);
-						fromplayer.sendMessage("Title set for player");
-						return;
+						if (title.equals("clear"))
+						{
+							sPlayerthem.setTitle("");
+							this.getDatabase().save(sPlayerthem);
+							fromplayer.sendMessage("Title cleared for player");
+							return;
+						} else {						
+							sPlayerthem.setTitle(title);
+							this.getDatabase().save(sPlayerthem);
+							fromplayer.sendMessage("Title set for player");
+							return;
+						}
 					} else {
 						fromplayer.sendMessage("You cannot set a title of a player who is not your race.");
 						return;
@@ -646,6 +664,21 @@ public class rpchat extends JavaPlugin
 				fromplayer.sendMessage("Only a king can set a title.");
 				return;
 			}
+		}
+	}
+
+	public boolean isIgnored(Player ignoredby, Player player) {
+		// TODO Auto-generated method stub
+		return this.essentials.getUser(player).isIgnoredPlayer(ignoredby.getName());
+	}
+
+	public void clearVotes(Player player) {
+		// TODO Auto-generated method stub
+		
+		List<sqlPlayer> players = getDatabase().find(sqlPlayer.class).where().ieq("vote", player.getName()).findList();
+		for (sqlPlayer p : players){
+			p.setVote("");
+			this.getDatabase().save(p);
 		}
 	}
 }

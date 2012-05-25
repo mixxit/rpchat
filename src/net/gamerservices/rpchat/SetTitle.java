@@ -53,6 +53,8 @@ public class SetTitle implements CommandExecutor {
 			player.sendMessage("Cannot set title, that minecraft account is not online");
 			
 		} else {
+			
+			
 			this.parent.setPlayerTitle(player, this.parent.getServer().getPlayer(args[0]), title);
 		}
 		return true;

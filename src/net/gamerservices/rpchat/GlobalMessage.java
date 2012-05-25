@@ -64,6 +64,8 @@ import org.bukkit.entity.Player;
 
      String race = "";
      race = this.parent.getPlayerRace(player);
+     String alliance = this.parent.getPlayerAlliance(player);
+     
 				System.out.println("[RPChat-G] " + player.getName() + "("+race+"):" + message);
      String tag = "";
      try
@@ -84,9 +86,10 @@ import org.bukkit.entity.Player;
        {
          if (p.equals(player))
          {
-           p.sendMessage("[" + this.parent.getColouredName(player) + "][" + this.parent.getRaceNameShorthand(race) + "] " + ChatColor.WHITE + this.parent.getPlayerDisplayName(player) + " " + this.parent.getPlayerLastName(player)+ ChatColor.WHITE + " " +this.parent.getPlayerTitle(player) + ": " + message);
+           p.sendMessage("[" + this.parent.getColouredName(player) + "][" + this.parent.getAllianceNameShorthand(alliance) + "] " + ChatColor.WHITE + this.parent.getPlayerDisplayName(player) + " " + this.parent.getPlayerLastName(player)+ ChatColor.WHITE + " " +this.parent.getPlayerTitle(player) + ": " + message);
          } else {
-           p.sendMessage("[" + this.parent.getColouredName(player) + "][" + this.parent.getRaceNameShorthand(race) + "] " + ChatColor.WHITE + this.parent.getPlayerDisplayName(player) + " " + this.parent.getPlayerLastName(player)+ ChatColor.WHITE + " " +this.parent.getPlayerTitle(player) +": " + message);
+        	 if (!this.parent.isIgnored(player,p))
+           p.sendMessage("[" + this.parent.getColouredName(player) + "][" + this.parent.getAllianceNameShorthand(alliance) + "] " + ChatColor.WHITE + this.parent.getPlayerDisplayName(player) + " " + this.parent.getPlayerLastName(player)+ ChatColor.WHITE + " " +this.parent.getPlayerTitle(player) +": " + message);
  
            count++;
          }

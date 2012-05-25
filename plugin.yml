@@ -45,6 +45,12 @@ commands:
     usage: |
            /<command> [msg]
            Example: /<command> Hello, townies!
+  alliancechat:
+    aliases: [ac]
+    description: Speaks to your alliance
+    usage: |
+           /<command> [msg]
+           Example: /<command> Hello, alliance!           
   racechat:
     aliases: [rc]
     description: Speaks to your race

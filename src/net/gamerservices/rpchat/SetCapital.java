@@ -32,10 +32,10 @@ public class SetCapital implements CommandExecutor {
 			if (sPlayerme.getElection() == 2)
 			{
 				
-				sqlRaces sRace = (sqlRaces)this.parent.getDatabase().find(sqlRaces.class).where().ieq("name", sPlayerme.getRace()).findUnique();
-				if (sRace == null) {
-					sRace = new sqlRaces();
-					sRace.setName(sPlayerme.getRace());
+				sqlAlliances sAlliance = (sqlAlliances)this.parent.getDatabase().find(sqlAlliances.class).where().ieq("name", sPlayerme.getAlliance()).findUnique();
+				if (sAlliance == null) {
+					sAlliance = new sqlAlliances();
+					sAlliance.setName(sPlayerme.getAlliance());
 					String world = player.getWorld().getName();
 					Double x = player.getLocation().getX();
 					Double y = player.getLocation().getY();
@@ -49,8 +49,8 @@ public class SetCapital implements CommandExecutor {
 					Float fyaw = player.getLocation().getYaw();
 					String location = world+","+fx+","+fy+","+fz+","+fyaw+","+fpitch;
 					
-					sRace.setCapitalloc(location);
-					this.parent.getDatabase().save(sRace);
+					sAlliance.setCapitalloc(location);
+					this.parent.getDatabase().save(sAlliance);
 					player.sendMessage("You have set the capital!");
 				} else {
 					String world = player.getWorld().getName();
@@ -67,12 +67,12 @@ public class SetCapital implements CommandExecutor {
 					String location = world+","+fx+","+fy+","+fz+","+fyaw+","+fpitch;
 					
 					
-					sRace.setCapitalloc(location);
-					this.parent.getDatabase().save(sRace);
+					sAlliance.setCapitalloc(location);
+					this.parent.getDatabase().save(sAlliance);
 				}
 				return true;
 			} else {
-				player.sendMessage("You are not the King of this race");
+				player.sendMessage("You are not the King of this alliance");
 				return true;
 			}
 		}

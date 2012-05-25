@@ -66,6 +66,7 @@ public class RaceMessage
 
      String race = "";
      race = this.parent.getPlayerRace(player);
+     String alliance = this.parent.getPlayerAlliance(player);
     System.out.println("[RPChat-RC] " + player.getName() + "("+race+"):" + message);
 
     try
@@ -89,7 +90,7 @@ public class RaceMessage
         {
            if (p.equals(player))
           {
-             p.sendMessage("[" + this.parent.getColouredName(player) + "][" + this.parent.getRaceNameShorthand(race) + "] " + ChatColor.WHITE + this.parent.getPlayerDisplayName(player) + " " + this.parent.getPlayerLastName(player)+ " " +this.parent.getPlayerTitle(player) +ChatColor.GOLD + ": " + message);
+             p.sendMessage("[" + this.parent.getColouredName(player) + "][" + this.parent.getAllianceNameShorthand(alliance) + "] " + ChatColor.WHITE + this.parent.getPlayerDisplayName(player) + " " + this.parent.getPlayerLastName(player)+ " " +this.parent.getPlayerTitle(player) +ChatColor.GOLD + ": " + message);
           }
           else
           {
@@ -97,9 +98,12 @@ public class RaceMessage
 
              if (!targetrace.equals(race))
               continue;
-             p.sendMessage("[" + this.parent.getColouredName(player) + "][" + this.parent.getRaceNameShorthand(race) + "] " + ChatColor.WHITE + this.parent.getPlayerDisplayName(player) + " " + this.parent.getPlayerLastName(player)+" " +this.parent.getPlayerTitle(player) + ChatColor.GOLD + ": " + message);
-
-             count++;
+             
+             if (!this.parent.isIgnored(player,p))
+             {
+            	 p.sendMessage("[" + this.parent.getColouredName(player) + "][" + this.parent.getAllianceNameShorthand(alliance) + "] " + ChatColor.WHITE + this.parent.getPlayerDisplayName(player) + " " + this.parent.getPlayerLastName(player)+" " +this.parent.getPlayerTitle(player) + ChatColor.GOLD + ": " + message);
+             	count++;
+             }
           }
 
         }

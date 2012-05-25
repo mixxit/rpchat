@@ -57,6 +57,9 @@ public class sqlPlayer
 	
 	private int election;
 	
+	@Length(max=32)
+	private String alliance = "";
+
 	public void setId(int id) { this.id = id; }
 	
 	public int getId()
@@ -195,6 +198,15 @@ public class sqlPlayer
 	
 	public String getOptional() {
 		return this.optional;
+	}
+	
+	public void setAlliance(String alliance)
+	{
+		this.alliance = alliance;
+	}
+	
+	public String getAlliance() {
+		return this.alliance;
 	}
 
 }

@@ -27,6 +27,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
        sPlayer.setDisplay(event.getPlayer().getName());
        sPlayer.setRace("human");
        sPlayer.setLanguage("human");
+       sPlayer.setAlliance("combine");
  
        this.plugin.getDatabase().save(sPlayer);
      }
@@ -34,7 +35,8 @@ import org.bukkit.event.player.PlayerJoinEvent;
      if (!sPlayer.getFlags().equals("done"))
      {
        event.getPlayer().sendMessage(ChatColor.RED + "*********************************************************");
-       event.getPlayer().sendMessage(ChatColor.RED + "You currently have NO race set - use /race to set one");
+       event.getPlayer().sendMessage(ChatColor.RED + "You have been given the opportunity to reset your /race");
+       event.getPlayer().sendMessage(ChatColor.RED + "NOTE: You will lose all votes and king status if you do this");
        event.getPlayer().sendMessage(ChatColor.RED + "*********************************************************");
      }
 
@@ -88,6 +90,13 @@ import org.bukkit.event.player.PlayerJoinEvent;
 			   
 		   }
 		   
+		   if (sPlayer.getChatfocus().equals("alliance"))
+		   {
+			   
+			   DoAllianceMessage(player, message);
+			   
+		   }
+		   
 		   if (sPlayer.getChatfocus().equals("ooc"))
 		   {
 			   
@@ -112,6 +121,12 @@ private void DoTownMessage(Player playername, String message) {
 	
 	TownMessage tm = new TownMessage(this.plugin);
 	tm.sendTownChat(playername, message);
+}
+
+private void DoAllianceMessage(Player playername, String message) {
+	
+	AllianceMessage tm = new AllianceMessage(this.plugin);
+	tm.sendAllianceChat(playername, message);
 }
 
 private void DoRaceMessage(Player playername, String message) {

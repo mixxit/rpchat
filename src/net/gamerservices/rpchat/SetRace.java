@@ -35,6 +35,7 @@
        sPlayer.setDisplay(player.getName());
        sPlayer.setRace("human");
        sPlayer.setLanguage("human");
+       sPlayer.setAlliance("combine");
        this.plugin.getDatabase().save(sPlayer);
      }	
  
@@ -48,7 +49,7 @@
      int matchcount = 0;
      String targetrace = args[0].toLowerCase();
 			 System.out.println("Target race for client ("+player.getName()+"): " + targetrace);
-     String[] races = { "human", "highelf", "woodelf", "halfelf", "darkelf", "vampire", "barbarian", "orc", "ogre", "troll", "halfdragon", "gnome", "goblin", "hobbit", "highhuman", "undead", "dwarf", "ratman", "lizardman", "elemental", "kobold", "angel", "fallenangel" };
+     String[] races = { "human", "highelf", "woodelf", "halfelf", "darkelf", "vampire", "barbarian", "orc", "ogre", "troll", "halfdragon", "gnome", "goblin", "hobbit", "highhuman", "undead", "dwarf", "ratman", "lizardman", "elemental", "kobold", "angel", "fallenangel", "clockwork" };
      for (String rs : races)
      {
        if (!rs.equals(targetrace))
@@ -64,7 +65,7 @@
        {
          racelist = racelist + r + ",";
        }
-       player.sendMessage(ChatColor.RED + "Human, HighElf, WoodElf, HalfElf, DarkElf, Vampire, Barbarian, Orc, Ogre, Troll, HalfDragon, Gnome, Goblin, Hobbit, HighHuman, Undead, Dwarf, Ratman, Lizardman, Elemental, Kobold, Angel, FallenAngel");
+       player.sendMessage(ChatColor.RED + "Human, HighElf, WoodElf, HalfElf, DarkElf, Vampire, Barbarian, Orc, Ogre, Troll, HalfDragon, Gnome, Goblin, Hobbit, HighHuman, Undead, Dwarf, Ratman, Lizardman, Elemental, Kobold, Angel, FallenAngel, Clockwork");
        return false;
      }
  
@@ -75,10 +76,93 @@
      }
  
      sPlayer.setRace(args[0].toString().toLowerCase());
+     
+     String alliance = "unknown";
+ 	if (args[0].toString().toLowerCase().equals("human")) {
+ 		alliance = "combine";
+	}
+ 	if (args[0].toString().toLowerCase().equals("highelf")) {
+ 		alliance = "realm";
+ 	}
+ 	if (args[0].toString().toLowerCase().equals("woodelf")) {
+ 		alliance = "realm";
+ 	}
+ 	if (args[0].toString().toLowerCase().equals("halfelf")) {
+ 		alliance = "realm";
+ 	}
+ 	if (args[0].toString().toLowerCase().equals("darkelf")) {
+ 		alliance = "dominion";
+ 	}
+ 	if (args[0].toString().toLowerCase().equals("vampire")) {
+ 		alliance = "dominion";
+ 	}
+ 	if (args[0].toString().toLowerCase().equals("barbarian")) {
+ 		alliance = "combine";
+ 	}
+ 	if (args[0].toString().toLowerCase().equals("orc")) {
+ 		alliance = "legion";
+ 	}
+ 	if (args[0].toString().toLowerCase().equals("ogre")) {
+ 		alliance = "legion";
+ 	}
+ 	if (args[0].toString().toLowerCase().equals("troll")) {
+ 		alliance = "legion";
+ 	}
+ 	if (args[0].toString().toLowerCase().equals("halfdragon")) {
+ 		alliance = "legacy";
+ 	}
+ 	if (args[0].toString().toLowerCase().equals("gnome")) {
+ 		alliance = "combine";
+ 	}
+ 	if (args[0].toString().toLowerCase().equals("goblin")) {
+ 		alliance = "legion";
+ 	}
+ 	if (args[0].toString().toLowerCase().equals("hobbit")) {
+ 		alliance = "combine";
+ 	}
+ 	if (args[0].toString().toLowerCase().equals("highhuman")) {
+ 		alliance = "combine";
+ 	}
+ 	if (args[0].toString().toLowerCase().equals("undead")) {
+ 		alliance = "dominion";
+ 	}
+ 	if (args[0].toString().toLowerCase().equals("dwarf")) {
+ 		alliance = "combine";
+ 	}
+ 	if (args[0].toString().toLowerCase().equals("ratman")) {
+ 		alliance = "legion";
+ 	}
+ 	if (args[0].toString().toLowerCase().equals("lizardman")) {
+ 		alliance = "legacy";
+ 	}
+ 	if (args[0].toString().toLowerCase().equals("elemental")) {
+ 		alliance = "legion";
+ 	}
+ 	if (args[0].toString().toLowerCase().equals("kobold")) {
+ 		alliance = "legion";
+ 	}
+ 	if (args[0].toString().toLowerCase().equals("angel")) {
+ 		alliance = "foresworn";
+ 	}
+ 	if (args[0].toString().toLowerCase().equals("fallenangel")) {
+ 		alliance = "forsaken";
+ 	}
+ 	
+ 	if (args[0].toString().toLowerCase().equals("clockwork")) {
+ 		alliance = "collective";
+ 	}
+ 	 sPlayer.setAlliance(alliance);
+     
      sPlayer.setFlags("done");
+     sPlayer.setBitwise(0);
+     sPlayer.setElection(0);
+     sPlayer.setVote("");
      this.plugin.getDatabase().save(sPlayer);
- 
+     this.plugin.clearVotes(player);
+     
      player.sendMessage("Your race is now: " + args[0]);
+     player.sendMessage("Your alliance is now: " + alliance);
+     
  
      player.sendMessage("Perhaps now would be a good time to find a race skin on the skindex or planetminecraft for " + args[0]);
      return true;

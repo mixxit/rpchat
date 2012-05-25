@@ -2,6 +2,7 @@ package net.gamerservices.rpchat;
 
 import java.util.List;
 
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -31,18 +32,18 @@ public class SetVote implements CommandExecutor {
 			return true;
 		} else {
 			if (args.length == 0) {
-				player.sendMessage(sPlayerme.getRace() + " Leadership Election");
+				player.sendMessage(sPlayerme.getAlliance() + " Leadership Election");
 				player.sendMessage("----------------------");
 				
-				List<sqlPlayer> players = parent.getDatabase().find(sqlPlayer.class).where().ieq("race", sPlayerme.getRace()).findList();
+				List<sqlPlayer> players = parent.getDatabase().find(sqlPlayer.class).where().ieq("alliance", sPlayerme.getAlliance()).findList();
 				for (sqlPlayer p : players){
                     if (p.getElection() == 1)
                     {
-                    	player.sendMessage(p.getName() + "("+p.getDisplay()+")");
+                    	player.sendMessage(p.getName() + "("+p.getDisplay()+") - " + this.parent.getVoteCount(p.getName()));
                     }
                     if (p.getElection() == 2)
                     {
-                    	player.sendMessage(p.getName() + "("+p.getDisplay()+") - King");
+                    	player.sendMessage(p.getName() + "("+p.getDisplay()+") - " + this.parent.getVoteCount(p.getName()) + " votes " + ChatColor.RED + " [King]");
                     }
                     
 				}
@@ -61,8 +62,8 @@ public class SetVote implements CommandExecutor {
 					
 					return true;
 				} else {
-					System.out.println("[RPChat] Vote request is checking if Race: "+sPlayerme.getRace() +"("+sPlayerme.getName() +") equals Race: " + sPlayer.getRace() + " ("+sPlayer.getName()+")");
-					if (sPlayerme.getRace().equals(sPlayer.getRace()))
+					System.out.println("[RPChat] Vote request is checking if Alliance: "+sPlayerme.getAlliance() +"("+sPlayerme.getName() +") equals Alliance: " + sPlayer.getAlliance() + " ("+sPlayer.getName()+")");
+					if (sPlayerme.getAlliance().equals(sPlayer.getAlliance()))
 					{
 						if (sPlayer.getElection() == 1 || sPlayer.getElection() == 2)
 						{
@@ -81,7 +82,7 @@ public class SetVote implements CommandExecutor {
 							return true;
 						}
 					} else {
-						player.sendMessage("You cannot vote for someone of that race (only your own)");
+						player.sendMessage("You cannot vote for someone of that alliance (only your own)");
 						return true;
 					}
 				}

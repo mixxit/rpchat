@@ -66,6 +66,7 @@ import org.bukkit.entity.Player;
 
      String race = "";
      race = this.parent.getPlayerRace(player);
+     String alliance = this.parent.getPlayerAlliance(player);
      System.out.println("[RPChat-LC] " + player.getName() + "("+race+"):" + message);
      String tag = "";
      try
@@ -83,39 +84,31 @@ import org.bukkit.entity.Player;
      {
        if (p.equals(player))
        {
-         if (p.getWorld().getName().compareTo("Redstone") == 0)
-         {
-           p.sendMessage("[" + this.parent.getColouredName(player) + "][" + this.parent.getRaceNameShorthand(race) + "] " + ChatColor.WHITE + this.parent.getPlayerDisplayName(player) + " " + this.parent.getPlayerLastName(player)+ " " +this.parent.getPlayerTitle(player) + ChatColor.YELLOW + " says '" + message + "'");
-         }
-         else p.sendMessage("[" + this.parent.getColouredName(player) + "][" + this.parent.getRaceNameShorthand(race) + "] " + ChatColor.WHITE + this.parent.getPlayerDisplayName(player) + " " + this.parent.getPlayerLastName(player)+" " + this.parent.getPlayerTitle(player) +ChatColor.YELLOW + " says '" + message + "'");
- 
-       }
-       else if (p.getWorld().getName().compareTo("Redstone") == 0)
-       {
-         p.sendMessage("[" + this.parent.getColouredName(player) + "][" + this.parent.getRaceNameShorthand(race) + "] " + ChatColor.WHITE + this.parent.getPlayerDisplayName(player) + " " + this.parent.getPlayerLastName(player)+ " " +this.parent.getPlayerTitle(player) +ChatColor.YELLOW + " says '" + message + "'");
-         count++;
-       }
-       else
-       {
-         double x1 = p.getLocation().getX();
-         double y1 = p.getLocation().getY();
-         double z1 = p.getLocation().getZ();
- 
-         double x2 = player.getLocation().getX();
-         double y2 = player.getLocation().getY();
-         double z2 = player.getLocation().getZ();
- 
-         int xdist = (int)(x1 - x2);
-         int ydist = (int)(y1 - y2);
-         int zdist = (int)(z1 - z2);
- 
-         if ((xdist < -100) || (xdist > 100) || (ydist < -100) || (ydist > 100) || (zdist < -100) || (zdist > 100))
-         {
-           continue;
-         }
- 
-         p.sendMessage("[" + player.getName() + "][" + this.parent.getRaceNameShorthand(race) + "] " + ChatColor.WHITE + player.getDisplayName() + " " + this.parent.getPlayerTitle(player) +ChatColor.YELLOW + " says '" + message + "'");
-         count++;
+         p.sendMessage("[" + this.parent.getColouredName(player) + "][" + this.parent.getAllianceNameShorthand(alliance) + "] " + ChatColor.WHITE + this.parent.getPlayerDisplayName(player) + " " + this.parent.getPlayerLastName(player)+" " + this.parent.getPlayerTitle(player) +ChatColor.YELLOW + " says '" + message + "'");
+       } else {
+    	   
+    	   if (!this.parent.isIgnored(player,p))
+    	   {
+	         double x1 = p.getLocation().getX();
+	         double y1 = p.getLocation().getY();
+	         double z1 = p.getLocation().getZ();
+	 
+	         double x2 = player.getLocation().getX();
+	         double y2 = player.getLocation().getY();
+	         double z2 = player.getLocation().getZ();
+	 
+	         int xdist = (int)(x1 - x2);
+	         int ydist = (int)(y1 - y2);
+	         int zdist = (int)(z1 - z2);
+	 
+	         if ((xdist < -100) || (xdist > 100) || (ydist < -100) || (ydist > 100) || (zdist < -100) || (zdist > 100))
+	         {
+	           continue;
+	         }
+	 
+	         p.sendMessage("[" + player.getName() + "][" + this.parent.getAllianceNameShorthand(alliance) + "] " + ChatColor.WHITE + player.getDisplayName() + " " + this.parent.getPlayerTitle(player) +ChatColor.YELLOW + " says '" + message + "'");
+	         count++;
+    	   }
        }
  
      }

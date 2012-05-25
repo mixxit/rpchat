@@ -31,20 +31,20 @@ public class GotoCapital implements CommandExecutor {
 					return true;
 				} else {
 					
-					sqlRaces sRace = (sqlRaces)this.parent.getDatabase().find(sqlRaces.class).where().ieq("name", sPlayerme.getRace()).findUnique();
-					if (sRace == null) {
-						sRace = new sqlRaces();
-						sRace.setName(sPlayerme.getRace());
-						this.parent.getDatabase().save(sRace);
+					sqlAlliances sAlliance = (sqlAlliances)this.parent.getDatabase().find(sqlAlliances.class).where().ieq("name", sPlayerme.getAlliance()).findUnique();
+					if (sAlliance == null) {
+						sAlliance = new sqlAlliances();
+						sAlliance.setName(sPlayerme.getAlliance());
+						this.parent.getDatabase().save(sAlliance);
 						player.sendMessage("Your capital is not set");
 						return true;
 					} else {
-						if (sRace.getCapitalloc().equals(""))
+						if (sAlliance.getCapitalloc().equals(""))
 						{
 							player.sendMessage("Your capital is not set");
 							return true;
 						} else {
-							String capital = sRace.getCapitalloc();
+							String capital = sAlliance.getCapitalloc();
 							String[] locArray = capital.split(",");
 							World world = this.parent.getServer().getWorld(locArray[0]);
 							

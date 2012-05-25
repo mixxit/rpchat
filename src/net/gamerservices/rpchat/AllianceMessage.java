@@ -2,9 +2,7 @@ package net.gamerservices.rpchat;
 
 import com.palmergames.bukkit.towny.exceptions.NotRegisteredException;
 import com.palmergames.bukkit.towny.Towny;
-import com.palmergames.bukkit.towny.object.Nation;
 import com.palmergames.bukkit.towny.object.Resident;
-import com.palmergames.bukkit.towny.object.Town;
 import com.palmergames.bukkit.towny.object.TownyUniverse;
 import java.io.PrintStream;
 import org.bukkit.ChatColor;
@@ -15,13 +13,13 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class TownMessage
+public class AllianceMessage
   implements CommandExecutor
 {
   private Towny towny;
   private rpchat parent;
 
-  public TownMessage(rpchat rpchat)
+  public AllianceMessage(rpchat rpchat)
   {
      this.parent = rpchat;
      this.towny = this.parent.getTowny();
@@ -46,7 +44,7 @@ public class TownMessage
        Player player = this.parent.getServer().getPlayer(arg0.getName());
        if (message.compareTo("") > 0)
       {
-         sendTownChat(player, message);
+         sendAllianceChat(player, message);
          return true;
       }
        return false;
@@ -59,18 +57,17 @@ public class TownMessage
      return false;
   }
 
-  public void sendTownChat(Player player, String message)
+  public void sendAllianceChat(Player player, String message)
   {
      if (this.parent.isMuted(player))
     {
        return;
     }
-    System.out.println("[RPChat-TC] " + player + ":" + message);
 
-     String race = "";
-     race = this.parent.getPlayerRace(player);
+
      String alliance = this.parent.getPlayerAlliance(player);
-			  System.out.println("[RPChat-TC] " + player.getName() + "("+race+"):" + message);
+    System.out.println("[RPChat-RC] " + player.getName() + "("+alliance+"):" + message);
+
     try
     {
        Resident res = this.towny.getTownyUniverse().getResident(player.getName());
@@ -84,28 +81,6 @@ public class TownMessage
          tag = "Refugee";
       }
 
-       String town = "";
-      try
-      {
-         town = res.getTown().getName();
-      }
-      catch (Exception e)
-      {
-         town = "";
-         player.sendMessage("You cannot send a message to your town as you are not in one.");
-         return;
-      }
-
-       String nation = "";
-      try
-      {
-         nation = res.getTown().getNation().getName();
-      }
-      catch (Exception e)
-      {
-         nation = "";
-      }
-
        int count = 0;
 
        for (World w : player.getServer().getWorlds())
@@ -114,25 +89,20 @@ public class TownMessage
         {
            if (p.equals(player))
           {
-             p.sendMessage("[" + this.parent.getColouredName(player) + "][" + this.parent.getAllianceNameShorthand(alliance) + "] " + ChatColor.WHITE + this.parent.getPlayerDisplayName(player) + " " + this.parent.getPlayerLastName(player) + this.parent.getPlayerTitle(player) + ChatColor.AQUA + ": " + message);
+             p.sendMessage("[" + this.parent.getColouredName(player) + "][" + this.parent.getAllianceNameShorthand(alliance) + "] " + ChatColor.WHITE + this.parent.getPlayerDisplayName(player) + " " + this.parent.getPlayerLastName(player)+ " " +this.parent.getPlayerTitle(player) +ChatColor.RED + ": " + message);
           }
-          else {
-             Resident targetres = this.towny.getTownyUniverse().getResident(p.getName());
-            try
-            {
-               if (!targetres.getTown().equals(res.getTown()))
-                continue;
-               if (!this.parent.isIgnored(player,p))
-               {
-	               p.sendMessage("[" + this.parent.getColouredName(player) + "][" + this.parent.getAllianceNameShorthand(alliance) + "] " + ChatColor.WHITE + this.parent.getPlayerDisplayName(player) + " " + this.parent.getPlayerLastName(player) + " " +this.parent.getPlayerTitle(player) + ChatColor.AQUA + ": " + message);
-	
-	               count++;
-               }
-            }
-            catch (Exception localException1)
-            {
-            }
+          else
+          {
+             String targetalliance = this.parent.getPlayerAlliance(p);
 
+             if (!targetalliance.equals(alliance))
+              continue;
+             
+             if (!this.parent.isIgnored(player,p))
+             {
+            	 p.sendMessage("[" + this.parent.getColouredName(player) + "][" + this.parent.getAllianceNameShorthand(alliance) + "] " + ChatColor.WHITE + this.parent.getPlayerDisplayName(player) + " " + this.parent.getPlayerLastName(player)+" " +this.parent.getPlayerTitle(player) + ChatColor.RED + ": " + message);
+             	count++;
+             }
           }
 
         }
@@ -141,7 +111,7 @@ public class TownMessage
 
        if (count < 1)
       {
-         player.sendMessage(ChatColor.GRAY + "* You speak but nobody hears you (There is no-one in this world, try another world or use global chat)");
+         player.sendMessage(ChatColor.GRAY + "* You speak but nobody hears you (There is no-one from your race online.)");
       }
     }
     catch (NotRegisteredException localNotRegisteredException)

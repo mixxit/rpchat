@@ -32,7 +32,7 @@ public class SetDefaultChannel implements CommandExecutor {
 				player.sendMessage("Default channel is currently:" + sPlayerme.getChatfocus());
 				return false;
 			} else {
-				if (args[0].equals("local") || args[0].equals("global") || args[0].equals("town") || args[0].equals("ooc") || args[0].equals("race"))
+				if (args[0].equals("local") || args[0].equals("global") || args[0].equals("town") || args[0].equals("ooc") || args[0].equals("race") || args[0].equals("alliance"))
 				{
 					sPlayerme.setChatfocus(args[0]);
 					this.parent.getDatabase().save(sPlayerme);

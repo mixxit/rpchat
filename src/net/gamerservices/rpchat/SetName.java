@@ -32,6 +32,7 @@ public class SetName implements CommandExecutor {
 			sPlayer.setDisplay(player.getName());
 			sPlayer.setRace("human");
 			sPlayer.setLanguage("human");
+			sPlayer.setAlliance("combine");
 			this.parent.getDatabase().save(sPlayer);
 		}
 		if (arg3.length == 0) {

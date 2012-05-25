@@ -30,6 +30,7 @@ public class SetLastName implements CommandExecutor {
 			sPlayer.setDisplay(player.getName());
 			sPlayer.setRace("human");
 			sPlayer.setLanguage("human");
+			sPlayer.setAlliance("combine");
 			this.parent.getDatabase().save(sPlayer);
 		}
 		if (arg3.length == 0) {
@@ -37,6 +38,14 @@ public class SetLastName implements CommandExecutor {
 			player.sendMessage(ChatColor.LIGHT_PURPLE + "To set a new lastname use the: '/lastname lastame' command");
 			return true;
 			
+		}
+		
+		if (arg3[0].matches("clear"))
+		{
+			sPlayer.setLastname("");
+			this.parent.getDatabase().save(sPlayer);
+			player.sendMessage("Your lastname has been cleared");
+			return true;
 		}
 		
 		if (arg3[0].matches("^[a-zA-Z]+$"))
