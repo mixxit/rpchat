@@ -27,30 +27,30 @@ public class GotoCapital implements CommandExecutor {
 						
 				sqlPlayer sPlayerme = (sqlPlayer)this.parent.getDatabase().find(sqlPlayer.class).where().ieq("name", player.getName()).findUnique();
 				if (sPlayerme == null) {
-					player.sendMessage("You cannot goto the capital while your account is being updated");
+					player.sendMessage("You cannot goto the racial capital while your account is being updated");
 					return true;
 				} else {
 					
-					sqlAlliances sAlliance = (sqlAlliances)this.parent.getDatabase().find(sqlAlliances.class).where().ieq("name", sPlayerme.getAlliance()).findUnique();
-					if (sAlliance == null) {
-						sAlliance = new sqlAlliances();
-						sAlliance.setName(sPlayerme.getAlliance());
-						this.parent.getDatabase().save(sAlliance);
-						player.sendMessage("Your capital is not set");
+					sqlRaces sRace = (sqlRaces)this.parent.getDatabase().find(sqlRaces.class).where().ieq("name", sPlayerme.getRace()).findUnique();
+					if (sRace == null) {
+						sRace = new sqlRaces();
+						sRace.setName(sPlayerme.getRace());
+						this.parent.getDatabase().save(sRace);
+						player.sendMessage("Your racial capital is not set");
 						return true;
 					} else {
-						if (sAlliance.getCapitalloc().equals(""))
+						if (sRace.getCapitalloc().equals(""))
 						{
-							player.sendMessage("Your capital is not set");
+							player.sendMessage("Your racial capital is not set");
 							return true;
 						} else {
-							String capital = sAlliance.getCapitalloc();
+							String capital = sRace.getCapitalloc();
 							String[] locArray = capital.split(",");
 							World world = this.parent.getServer().getWorld(locArray[0]);
 							
 							Location loc = new Location(world, Double.parseDouble(locArray[1]), Double.parseDouble(locArray[2]), Double.parseDouble(locArray[3]),Float.parseFloat(locArray[4]),Float.parseFloat(locArray[5]));
-						
-							player.teleport(loc);
+							this.parent.teleport(player,loc);
+							
 						}
 					}
 					return true;

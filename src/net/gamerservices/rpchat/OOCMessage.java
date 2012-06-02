@@ -61,6 +61,8 @@ public class OOCMessage
 
   public void sendOOC(Player player, String message)
   {
+	  
+	  
      if (this.parent.isMuted(player))
     {
        return;
@@ -111,13 +113,13 @@ public class OOCMessage
       {
          if (p.equals(player))
         {
-           p.sendMessage("[" + this.parent.getColouredName(player) + "][" + this.parent.getAllianceNameShorthand(alliance) + "] " + ChatColor.WHITE + this.parent.getPlayerDisplayName(player) + " " +this.parent.getPlayerTitle(player) + ": " + ChatColor.LIGHT_PURPLE + message);
+           p.sendMessage("[" + this.parent.getColouredName(player) + "][" + this.parent.getAllianceNameShorthand(alliance) + "] " + ChatColor.WHITE + this.parent.getPlayerDisplayName(player) + " " +this.parent.getPlayerTitle(player) + ": " + ChatColor.WHITE + message);
         }
         else
         {
            if (!this.parent.isIgnored(player,p))
            {
-        	   p.sendMessage("[" + this.parent.getColouredName(player) + "][" + this.parent.getAllianceNameShorthand(alliance) + "] " + ChatColor.WHITE + this.parent.getPlayerDisplayName(player) + " " +this.parent.getPlayerTitle(player) + ": " + ChatColor.LIGHT_PURPLE + message);
+        	   p.sendMessage("[" + this.parent.getColouredName(player) + "][" + this.parent.getAllianceNameShorthand(alliance) + "] " + ChatColor.WHITE + this.parent.getPlayerDisplayName(player) + " " +this.parent.getPlayerTitle(player) + ": " + ChatColor.WHITE + message);
            		count++;
            }
         }
@@ -131,6 +133,8 @@ public class OOCMessage
     catch (NotRegisteredException localNotRegisteredException)
     {
     }
+    
+    
   }
 }
 

@@ -32,10 +32,10 @@ public class SetVote implements CommandExecutor {
 			return true;
 		} else {
 			if (args.length == 0) {
-				player.sendMessage(sPlayerme.getAlliance() + " Leadership Election");
+				player.sendMessage(sPlayerme.getRace() + " Leadership Election");
 				player.sendMessage("----------------------");
 				
-				List<sqlPlayer> players = parent.getDatabase().find(sqlPlayer.class).where().ieq("alliance", sPlayerme.getAlliance()).findList();
+				List<sqlPlayer> players = parent.getDatabase().find(sqlPlayer.class).where().ieq("race", sPlayerme.getRace()).findList();
 				for (sqlPlayer p : players){
                     if (p.getElection() == 1)
                     {
@@ -62,8 +62,8 @@ public class SetVote implements CommandExecutor {
 					
 					return true;
 				} else {
-					System.out.println("[RPChat] Vote request is checking if Alliance: "+sPlayerme.getAlliance() +"("+sPlayerme.getName() +") equals Alliance: " + sPlayer.getAlliance() + " ("+sPlayer.getName()+")");
-					if (sPlayerme.getAlliance().equals(sPlayer.getAlliance()))
+					System.out.println("[RPChat] Vote request is checking if Race: "+sPlayerme.getRace() +"("+sPlayerme.getName() +") equals Race: " + sPlayer.getRace() + " ("+sPlayer.getName()+")");
+					if (sPlayerme.getRace().equals(sPlayer.getRace()))
 					{
 						if (sPlayer.getElection() == 1 || sPlayer.getElection() == 2)
 						{
@@ -82,7 +82,7 @@ public class SetVote implements CommandExecutor {
 							return true;
 						}
 					} else {
-						player.sendMessage("You cannot vote for someone of that alliance (only your own)");
+						player.sendMessage("You cannot vote for someone of that race (only your own)");
 						return true;
 					}
 				}

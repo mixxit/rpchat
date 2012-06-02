@@ -44,6 +44,7 @@ public class sqlPlayer
 	
 	@Length(max=32)
 	private String flags = "";
+	private int flagpole = 0;
 	private int killcount;
 	
 	@Length(max=32)
@@ -53,18 +54,37 @@ public class sqlPlayer
 	private int experience;
 	
 	@Length(max=32)
-	private String optional;
+	private String optional = "";
 	
 	private int election;
 	
 	@Length(max=32)
 	private String alliance = "";
-
+	
+	private int combatexperience;
+	private int rangedexperience;
+	private int scholarlyexperience;
+	private int naturalexperience;
+	private int power;
+	
+	@Length(max=32)
+	private String lastmeditate = "";
+	
+	@Length(max=32)
+	private String optedin = "";
+	
 	public void setId(int id) { this.id = id; }
 	
 	public int getId()
 	{
 		return this.id;
+	}
+	
+	public void setFlagpole(int flagpole) { this.flagpole = flagpole; }
+	
+	public int getFlagpole()
+	{
+		return this.flagpole;
 	}
 	
 	public void setKillcount(int count)
@@ -209,4 +229,63 @@ public class sqlPlayer
 		return this.alliance;
 	}
 
+	public void setCombatexperience(int exp)
+	{
+		this.combatexperience = exp;
+	}
+	
+	public int getCombatexperience() {
+		return this.combatexperience;
+	}
+	public void setRangedexperience(int exp)
+	{
+		this.rangedexperience = exp;
+	}
+	
+	public int getRangedexperience() {
+		return this.rangedexperience;
+	}
+	public void setScholarlyexperience(int exp)
+	{
+		this.scholarlyexperience = exp;
+	}
+	
+	public int getScholarlyexperience() {
+		return this.scholarlyexperience;
+	}
+	public void setNaturalexperience(int exp)
+	{
+		this.naturalexperience = exp;
+	}
+	
+	public int getNaturalexperience() {
+		return this.naturalexperience;
+	}
+
+
+	public void setPower(int power)
+	{
+		this.power = power;
+	}
+	
+	public int getPower() {
+		return this.power;
+	}
+	public void setLastmeditate(String timestamp)
+	{
+		this.lastmeditate = timestamp;
+	}
+	
+	public String getLastmeditate() {
+		return this.lastmeditate;
+	}
+	
+	public void setOptedin(String optedin)
+	{
+		this.optedin = optedin;
+	}
+	
+	public String getOptedin() {
+		return this.optedin;
+	}
 }

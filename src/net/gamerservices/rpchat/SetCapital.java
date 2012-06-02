@@ -25,17 +25,17 @@ public class SetCapital implements CommandExecutor {
 				
 		sqlPlayer sPlayerme = (sqlPlayer)this.parent.getDatabase().find(sqlPlayer.class).where().ieq("name", player.getName()).findUnique();
 		if (sPlayerme == null) {
-			player.sendMessage("You cannot set the capital while your account is being updated");
+			player.sendMessage("You cannot set the racial capital while your account is being updated");
 			return true;
 		} else {
 			
 			if (sPlayerme.getElection() == 2)
 			{
 				
-				sqlAlliances sAlliance = (sqlAlliances)this.parent.getDatabase().find(sqlAlliances.class).where().ieq("name", sPlayerme.getAlliance()).findUnique();
-				if (sAlliance == null) {
-					sAlliance = new sqlAlliances();
-					sAlliance.setName(sPlayerme.getAlliance());
+				sqlRaces sRace = (sqlRaces)this.parent.getDatabase().find(sqlRaces.class).where().ieq("name", sPlayerme.getRace()).findUnique();
+				if (sRace == null) {
+					sRace = new sqlRaces();
+					sRace.setName(sPlayerme.getRace());
 					String world = player.getWorld().getName();
 					Double x = player.getLocation().getX();
 					Double y = player.getLocation().getY();
@@ -49,9 +49,9 @@ public class SetCapital implements CommandExecutor {
 					Float fyaw = player.getLocation().getYaw();
 					String location = world+","+fx+","+fy+","+fz+","+fyaw+","+fpitch;
 					
-					sAlliance.setCapitalloc(location);
-					this.parent.getDatabase().save(sAlliance);
-					player.sendMessage("You have set the capital!");
+					sRace.setCapitalloc(location);
+					this.parent.getDatabase().save(sRace);
+					player.sendMessage("You have set the racial capital!");
 				} else {
 					String world = player.getWorld().getName();
 					Double x = player.getLocation().getX();
@@ -67,12 +67,12 @@ public class SetCapital implements CommandExecutor {
 					String location = world+","+fx+","+fy+","+fz+","+fyaw+","+fpitch;
 					
 					
-					sAlliance.setCapitalloc(location);
-					this.parent.getDatabase().save(sAlliance);
+					sRace.setCapitalloc(location);
+					this.parent.getDatabase().save(sRace);
 				}
 				return true;
 			} else {
-				player.sendMessage("You are not the King of this alliance");
+				player.sendMessage("You are not the King of this race");
 				return true;
 			}
 		}

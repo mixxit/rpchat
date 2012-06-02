@@ -25,16 +25,16 @@ public class SetTitle implements CommandExecutor {
 		if (args.length == 0) {
 			return false;			
 		}
-		
+
 		if (args.length == 1) {
 			return false;			
 		}
-		
+
 		String title = "";
 		int count = 0;
 		for (String item : args)
 		{
-			
+
 			if (count != 0)
 			{
 				if (count == 1)
@@ -46,15 +46,15 @@ public class SetTitle implements CommandExecutor {
 			}
 			count++;
 		}
-		
-			
+
+
 		if (this.parent.getServer().getPlayerExact(args[0]) == null)
 		{
 			player.sendMessage("Cannot set title, that minecraft account is not online");
-			
+
 		} else {
-			
-			
+
+
 			this.parent.setPlayerTitle(player, this.parent.getServer().getPlayer(args[0]), title);
 		}
 		return true;

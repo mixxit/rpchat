@@ -1,6 +1,6 @@
 name: rpchat
 main: net.gamerservices.rpchat.rpchat
-version: 0.08
+version: 0.10
 website: http://www.fallofanempire.com
 author: Mixxit
 database: true
@@ -20,13 +20,25 @@ commands:
     usage: |
            /<command> [message]
            Example: /<command> my message
+  reset:
+    aliases: [resetspec]
+    description: Resets a specialisation level
+    usage: |
+           /<command> [spectype]
+           Example: /<command> natural 
+  optin:
+    aliases: [iloveoptar]
+    description: Opts you in for global chat
+    usage: |
+           /<command> 
+           Example: /<command> 
   defaultchannel:
     aliases: [ch]
     description: Sets your default chat channel
     usage: |
            /<command> [channel]
            Example: /<command> local
-           Valid Channel names: local,global,race,town,ooc 
+           Valid Channel names: local,global,race,alliance 
   local:
     aliases: [l]
     description: Speaks locally
@@ -39,24 +51,18 @@ commands:
     usage: |
            /<command> [msg]
            Example: /<command> stops to examine the ground           
-  ooc:
-    aliases: [oo,oc]
-    description: Speaks out of character (global to that world)
-    usage: |
-           /<command> [msg]
-           Example: /<command> Hello, people in this world!
-  townchat:
-    aliases: [tc]
-    description: Speaks to your town
-    usage: |
-           /<command> [msg]
-           Example: /<command> Hello, townies!
   alliancechat:
     aliases: [ac]
     description: Speaks to your alliance
     usage: |
            /<command> [msg]
-           Example: /<command> Hello, alliance!           
+           Example: /<command> Hello, alliance!     
+  globalchat:
+    aliases: [g]
+    description: Speaks to the universe
+    usage: |
+           /<command> [msg]
+           Example: /<command> Hello, universe!        
   racechat:
     aliases: [rc]
     description: Speaks to your race
@@ -69,7 +75,6 @@ commands:
     usage: |
            /<command> [newname]
            Example: /<command> Deborah
-           
   lastname:
     aliases: [lastname]
     description: Sets your lastname
@@ -94,6 +99,25 @@ commands:
     usage: |
            /<command>
            Example: /<command>
+  getstats:
+    aliases: [stats]
+    description: Gets your player stats
+    usage: |
+           /<command>
+           Example: /<command>
+  meditate:
+    aliases: [med]
+    description: Meditates, increasing your power
+    usage: |
+           /<command>
+           Example: /<command>
+
+  alliance:
+    aliases: [all]
+    description: Accesses the King Alliance command
+    usage: |
+           /<command>
+           Example: /<command>
   title:
     aliases: [settitle]
     description: Sets a title for you or someone else
@@ -112,9 +136,33 @@ commands:
     usage: |
            /<command>
            Example: /<command>
-  global:
-    aliases: [g]
-    description: Speaks out of character (global to the whole server)
+  plantflag:
+    aliases: [plantflag]
+    description: Plants a flag at your location
     usage: |
-           /<command> [msg]
-           Example: /<command> Hello, people in this server!
+           /<command>
+           Example: /<command>
+  grantflag:
+    aliases: [grantflag]
+    description: Grants a flag to an alliance member
+    usage: |
+           /<command> [mcaccountname]
+           Example: /<command> notch
+  teleport:
+    aliases: [teleport]
+    description: Teleports you to a combat zone
+    usage: |
+           /<command>
+           Example: /<command> 
+  sector:
+    aliases: [sector]
+    description: Reports information on a sector
+    usage: |
+           /<command>
+           Example: /<command> 
+  who:
+    aliases: [list]
+    description: Lists people in your area
+    usage: |
+           /<command> [racename/playername]
+           Example: /<command> 

@@ -106,7 +106,7 @@ import org.bukkit.entity.Player;
 	           continue;
 	         }
 	 
-	         p.sendMessage("[" + player.getName() + "][" + this.parent.getAllianceNameShorthand(alliance) + "] " + ChatColor.WHITE + player.getDisplayName() + " " + this.parent.getPlayerTitle(player) +ChatColor.YELLOW + " says '" + message + "'");
+	         p.sendMessage("[" + this.parent.getColouredName(player) + "][" + this.parent.getAllianceNameShorthand(alliance) + "] " + ChatColor.WHITE + this.parent.getPlayerDisplayName(player) + " " + this.parent.getPlayerLastName(player) + " " + this.parent.getPlayerTitle(player) +ChatColor.YELLOW + " says '" + message + "'");
 	         count++;
     	   }
        }
@@ -115,7 +115,7 @@ import org.bukkit.entity.Player;
  
      if (count < 1)
      {
-    	 player.sendMessage(ChatColor.GRAY + "* You speak but nobody hears you (Use worldwide /ooc <msg> instead.)");
+    	 player.sendMessage(ChatColor.GRAY + "* You speak but nobody hears you. Try alliance chat (/ac <msg>) instead");
      }
    }
  }

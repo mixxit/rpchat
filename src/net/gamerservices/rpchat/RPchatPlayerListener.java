@@ -47,11 +47,14 @@ import org.bukkit.event.player.PlayerJoinEvent;
    {
      this.plugin = rpchat;
    }
+   
    @EventHandler(priority = EventPriority.MONITOR)
    public void onPlayerChat(PlayerChatEvent event)
    {
-	   DoMessageToChannel(event.getPlayer(), event.getMessage());
-	   event.setCancelled(true);
+	   if(!event.isCancelled()){
+		   DoMessageToChannel(event.getPlayer(), event.getMessage());
+		   event.setCancelled(true);
+	   }
    }
  
    private void DoMessageToChannel(Player player, String message) {
@@ -60,12 +63,12 @@ import org.bukkit.event.player.PlayerJoinEvent;
 	   sqlPlayer sPlayer = (sqlPlayer)this.plugin.getDatabase().find(sqlPlayer.class).where().ieq("name", player.getName()).findUnique();
 	   if (sPlayer == null) {
 		   
-		   DoGlobalMessage(player, message);
+		   DoLocalMessage(player, message);
 	   } else {
 		   if (sPlayer.getChatfocus().equals(""))
 		   {
 			   
-			   DoGlobalMessage(player, message);
+			   DoLocalMessage(player, message);
 			   
 		   }
 		   

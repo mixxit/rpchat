@@ -56,51 +56,60 @@ import org.bukkit.entity.Player;
  
    public void sendGlobal(Player player, String message)
    {
-			  
+	 	  
      if (this.parent.isMuted(player))
      {
        return;
      }
-
-     String race = "";
-     race = this.parent.getPlayerRace(player);
-     String alliance = this.parent.getPlayerAlliance(player);
      
-				System.out.println("[RPChat-G] " + player.getName() + "("+race+"):" + message);
-     String tag = "";
-     try
+     if (this.parent.playerOptedIn(player))
      {
-       tag = this.parent.getGroups(player);
+
+	     String race = "";
+	     race = this.parent.getPlayerRace(player);
+	     String alliance = this.parent.getPlayerAlliance(player);
+	     
+		 System.out.println("[RPChat-G] " + player.getName() + "("+race+"):" + message);
+	     String tag = "";
+	     try
+	     {
+	       tag = this.parent.getGroups(player);
+	     }
+	     catch (Exception e)
+	     {
+	       System.out.println(e.getMessage());
+	       tag = "Refugee";
+	     }
+	 
+	     int count = 0;
+	 
+	     for (World w : player.getServer().getWorlds())
+	     {
+	       for (Player p : w.getPlayers())
+	       {
+	         if (p.equals(player))
+	         {
+	           p.sendMessage("[" + this.parent.getColouredName(player) + "][" + this.parent.getAllianceNameShorthand(alliance) + "] " + ChatColor.WHITE + this.parent.getPlayerDisplayName(player) + " " + this.parent.getPlayerLastName(player)+ ChatColor.WHITE + " " +this.parent.getPlayerTitle(player) + ": " + message);
+	         } else {
+	        	 if (this.parent.playerOptedIn(p))
+	             {
+	        		 if (!this.parent.isIgnored(player,p))
+	        		 p.sendMessage("[" + this.parent.getColouredName(player) + "][" + this.parent.getAllianceNameShorthand(alliance) + "] " + ChatColor.WHITE + this.parent.getPlayerDisplayName(player) + " " + this.parent.getPlayerLastName(player)+ ChatColor.WHITE + " " +this.parent.getPlayerTitle(player) +": " + message);
+	             }
+	           count++;
+	         }
+	       }
+	     }
+	     if (count < 1)
+	     {
+	       player.sendMessage(ChatColor.GRAY + "* You speak but nobody is online.");
+	     }
+     } else {
+    	 player.sendMessage("You have not opted in for global chat, if you wish to use it please type /optin");
      }
-     catch (Exception e)
-     {
-       System.out.println(e.getMessage());
-       tag = "Refugee";
-     }
- 
-     int count = 0;
- 
-     for (World w : player.getServer().getWorlds())
-     {
-       for (Player p : w.getPlayers())
-       {
-         if (p.equals(player))
-         {
-           p.sendMessage("[" + this.parent.getColouredName(player) + "][" + this.parent.getAllianceNameShorthand(alliance) + "] " + ChatColor.WHITE + this.parent.getPlayerDisplayName(player) + " " + this.parent.getPlayerLastName(player)+ ChatColor.WHITE + " " +this.parent.getPlayerTitle(player) + ": " + message);
-         } else {
-        	 if (!this.parent.isIgnored(player,p))
-           p.sendMessage("[" + this.parent.getColouredName(player) + "][" + this.parent.getAllianceNameShorthand(alliance) + "] " + ChatColor.WHITE + this.parent.getPlayerDisplayName(player) + " " + this.parent.getPlayerLastName(player)+ ChatColor.WHITE + " " +this.parent.getPlayerTitle(player) +": " + message);
- 
-           count++;
-         }
-       }
- 
-     }
- 
-     if (count < 1)
-     {
-       player.sendMessage(ChatColor.GRAY + "* You speak but nobody is online.");
-     }
+     
    }
+   
+   
  }
 
