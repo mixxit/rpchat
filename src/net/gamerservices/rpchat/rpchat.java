@@ -856,6 +856,7 @@ public class rpchat extends JavaPlugin
 				  player.sendMessage("You gained a combat level!");
 			  }
 			  p.setCombatexperience(amount);
+			  player.sendMessage(ChatColor.RED + "You gained combat experience! ("+amount+")");
 			  this.getDatabase().save(p);
 
 		  } else {
@@ -881,6 +882,8 @@ public class rpchat extends JavaPlugin
 			  }
 			  
 			  p.setRangedexperience(amount);
+			  player.sendMessage(ChatColor.BLUE + "You gained ranged experience! ("+amount+")");
+
 			  this.getDatabase().save(p);
 		  } else {
 			  p.setRangedexperience(maxexperience);
@@ -903,6 +906,7 @@ public class rpchat extends JavaPlugin
 			  }			  
 			  
 			  p.setScholarlyexperience(amount);
+			  player.sendMessage(ChatColor.LIGHT_PURPLE + "You gained scholarly magic experience! ("+amount+")");
 			  this.getDatabase().save(p);
 		  } else {
 			  p.setScholarlyexperience(maxexperience);
@@ -965,6 +969,7 @@ public class rpchat extends JavaPlugin
 			  }	
 			  
 			  p.setNaturalexperience(amount);
+			  player.sendMessage(ChatColor.GREEN + "You gained Natural/Divine magic experience! ("+amount+")");
 			  this.getDatabase().save(p);
 		  } else {
 			  p.setNaturalexperience(maxexperience);
