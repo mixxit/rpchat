@@ -89,7 +89,7 @@ public class AllianceMessage
         {
            if (p.equals(player))
           {
-             p.sendMessage("[" + this.parent.getColouredName(player) + "][" + this.parent.getAllianceNameShorthand(alliance) + "] " + ChatColor.WHITE + this.parent.getPlayerDisplayName(player) + " " + this.parent.getPlayerLastName(player)+ " " +this.parent.getPlayerTitle(player) +ChatColor.RED + ": " + message);
+             p.sendMessage("[" + this.parent.getColouredName(player) + "][" + this.parent.getAllianceNameShorthand(alliance) + "] " + ChatColor.WHITE + this.parent.getPlayerDisplayName(player) + " " + this.parent.getPlayerLastName(player)+ " " +this.parent.getPlayerTitle(player) +ChatColor.AQUA + ": " + message);
           }
           else
           {
@@ -100,7 +100,7 @@ public class AllianceMessage
              
              if (!this.parent.isIgnored(player,p))
              {
-            	 p.sendMessage("[" + this.parent.getColouredName(player) + "][" + this.parent.getAllianceNameShorthand(alliance) + "] " + ChatColor.WHITE + this.parent.getPlayerDisplayName(player) + " " + this.parent.getPlayerLastName(player)+" " +this.parent.getPlayerTitle(player) + ChatColor.RED + ": " + message);
+            	 p.sendMessage("[" + this.parent.getColouredName(player) + "][" + this.parent.getAllianceNameShorthand(alliance) + "] " + ChatColor.WHITE + this.parent.getPlayerDisplayName(player) + " " + this.parent.getPlayerLastName(player)+" " +this.parent.getPlayerTitle(player) + ChatColor.AQUA + ": " + message);
              	count++;
              }
           }

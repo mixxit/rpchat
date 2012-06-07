@@ -4,10 +4,12 @@ import java.util.Date;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 public class DoPlantFlag implements CommandExecutor {
 
@@ -45,22 +47,21 @@ public class DoPlantFlag implements CommandExecutor {
 				    String tidyvictimrace = victimrace;
 				    String tidyattackerrace = sPlayerme.getAlliance();
 				    
-				    player.sendMessage("You have planted the flag!");
+				    player.sendMessage(ChatColor.YELLOW + "You notice a gold vein which is ripe harvesting by your alliance! You take your share of gold and plant the flag!");
+					
 				    this.parent.setSectorDominator(sector,sPlayerme.getAlliance());
-				    
-				    
-				    sPlayerme.setFlagpole(0);
-				    this.parent.getDatabase().save(sPlayerme);
-				    
 				    if (dominance.equals("none"))
 				    {
 				    	// spammy
 				    	//this.parent.sendMessageToAll(ChatColor.YELLOW + "Unchartered Territory has been captured by " + sPlayerme.getName() + " of The " + this.parent.capitalise(tidyattackerrace) + " Empire in sector " + sector + "!");
+					    ItemStack stack = new ItemStack(Material.GOLD_INGOT, 1);
+						player.getWorld().dropItemNaturally(player.getLocation(),stack);
+
 				    	return true;
 				    } else {
 				      if (tidyattackerrace.equals(victimrace)) {
 				    	  // already claimed it
-				    	  player.sendMessage("You have refreshed the flag");
+				    	  player.sendMessage(ChatColor.YELLOW + "You have refreshed the flag");
 				        return true;
 				      }
 				      this.parent.sendMessageToAlliance(victimrace, ChatColor.RED + sPlayerme.getName() + " of The " + this.parent.capitalise(tidyattackerrace) + " Empire has initiated an invasion of one of your sectors!!! Sector: (" + sector + ")");
@@ -71,6 +72,9 @@ public class DoPlantFlag implements CommandExecutor {
 				      {
 				        this.parent.sendMessageToAlliance(victimrace, ChatColor.GOLD + "To be teleported by the alliance mages use '/teleport " + dropshipid + "'");
 				      }
+					    ItemStack stack = new ItemStack(Material.GOLD_INGOT, 1);
+						player.getWorld().dropItemNaturally(player.getLocation(),stack);
+
 				      return true;
 				    }
 			    } else {
@@ -79,7 +83,7 @@ public class DoPlantFlag implements CommandExecutor {
 			    }
 				
 			} else {
-				player.sendMessage("You are not carrying your alliances flag!");
+				player.sendMessage(ChatColor.YELLOW + "You are not carrying your alliances flag! Ask an alliance King for permission in /ac");
 				return true;
 			}
 			

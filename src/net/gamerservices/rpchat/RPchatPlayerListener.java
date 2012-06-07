@@ -8,15 +8,18 @@
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
  import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 
  
  public class RPchatPlayerListener implements Listener
  {
    private rpchat plugin;
  
-		   @EventHandler(priority = EventPriority.HIGHEST)
+   @EventHandler(priority = EventPriority.HIGHEST)
    public void onPlayerJoin(PlayerJoinEvent event)
    {
      sqlPlayer sPlayer = (sqlPlayer)this.plugin.getDatabase().find(sqlPlayer.class).where().ieq("name", event.getPlayer().getName()).findUnique();
@@ -42,11 +45,37 @@ import org.bukkit.event.player.PlayerJoinEvent;
 
 			 event.getPlayer().setDisplayName(sPlayer.getDisplay());
    }
- 
+		   
    public RPchatPlayerListener(rpchat rpchat)
    {
      this.plugin = rpchat;
    }
+   
+   @EventHandler(priority = EventPriority.HIGH)
+   public void onPlayerMove(PlayerMoveEvent event)
+   {
+	   if(!event.isCancelled()){
+		   
+		   // check if same chunk
+		   if (!event.getFrom().getChunk().equals(event.getTo().getChunk()))
+		   {
+			   // check if same dominator
+			   String sectordominator = this.plugin.getSectorDominator(this.plugin.getSectorName(event.getTo()));
+			   String oldsectordominator = this.plugin.getSectorDominator(this.plugin.getSectorName(event.getFrom()));
+			   if(!sectordominator.equals(oldsectordominator))
+			   {
+				   if (!sectordominator.equals(this.plugin.getPlayerAlliance(event.getPlayer())))
+				   {
+					   event.getPlayer().sendMessage(ChatColor.GRAY + "Sector: " + sectordominator + " - /plantflag for $$$");
+				   } else {
+					   event.getPlayer().sendMessage(ChatColor.GRAY + "Sector: " + sectordominator);
+				   }
+				   
+			   }
+		   }
+	   }
+   }
+   
    
    @EventHandler(priority = EventPriority.MONITOR)
    public void onPlayerChat(PlayerChatEvent event)

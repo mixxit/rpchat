@@ -130,6 +130,12 @@ commands:
     usage: |
            /<command>
            Example: /<command>
+  setelection:
+    aliases: [forceelection]
+    description: Sets the election status of a player
+    usage: |
+           /<command>
+           Example: /<command> [mcaccountname] [status]
   capital:
     aliases: [cap]
     description: Teleports you to your capital

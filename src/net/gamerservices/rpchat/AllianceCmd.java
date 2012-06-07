@@ -19,7 +19,7 @@ public class AllianceCmd implements CommandExecutor {
 		
 		this.parent = rpchat;
 	}
-
+	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String commandstring,
 			String[] args) {
@@ -67,7 +67,7 @@ public class AllianceCmd implements CommandExecutor {
 		
 		if (!this.parent.isKing(player))
 		{
-			player.sendMessage("Only King's can access the Alliance sub commands");
+			player.sendMessage(ChatColor.YELLOW + "Only King's can access the Alliance sub commands");
 			return true;
 		}
 		
@@ -93,7 +93,7 @@ public class AllianceCmd implements CommandExecutor {
 						
 						ItemStack stack = new ItemStack(Material.GOLD_INGOT, removecount);
 						player.getWorld().dropItemNaturally(player.getLocation(),stack);
-						player.sendMessage("You were delivered " + removecount + " gold nuggets from the alliance vault");
+						player.sendMessage(ChatColor.YELLOW + "You were delivered " + removecount + " gold ingots from the alliance vault");
 						
 						itemsleft = itemsleft - removecount;
 					}
@@ -105,11 +105,11 @@ public class AllianceCmd implements CommandExecutor {
 					int itemsleft = this.parent.getAndClearAllianceResources(alliance);
 					ItemStack stack = new ItemStack(Material.GOLD_INGOT, itemsleft);
 					player.getWorld().dropItemNaturally(player.getLocation(),stack);
-					player.sendMessage("You were delivered " + itemsleft + " gold nuggets from the alliance vault");
+					player.sendMessage(ChatColor.YELLOW + "You were delivered " + itemsleft + " gold ingots from the alliance vault");
 					return true;
 				}
 			} else {
-				player.sendMessage("There is no gold in the vault to remove");
+				player.sendMessage(ChatColor.YELLOW + "There is no gold in the vault to remove");
 				return true;
 			}
 			
@@ -119,7 +119,7 @@ public class AllianceCmd implements CommandExecutor {
 		{
 			sqlPlayer sPlayerme = (sqlPlayer)this.parent.getDatabase().find(sqlPlayer.class).where().ieq("name", player.getName()).findUnique();
 			if (sPlayerme == null) {
-				player.sendMessage("You cannot set the alliance assembly while your account is being updated");
+				player.sendMessage(ChatColor.YELLOW + "You cannot set the alliance assembly while your account is being updated");
 				return true;
 			} else {
 				
@@ -145,7 +145,7 @@ public class AllianceCmd implements CommandExecutor {
 						
 						sAlliance.setCapitalloc(location);
 						this.parent.getDatabase().save(sAlliance);
-						player.sendMessage("You have set the alliance assembly!");
+						player.sendMessage(ChatColor.YELLOW + "You have set the alliance assembly!");
 					} else {
 						String world = player.getWorld().getName();
 						Double x = player.getLocation().getX();
@@ -160,13 +160,13 @@ public class AllianceCmd implements CommandExecutor {
 						
 						String location = world+","+fx+","+fy+","+fz+","+fyaw+","+fpitch;
 						
-						player.sendMessage("You have set the alliance assembly!");
+						player.sendMessage(ChatColor.YELLOW + "You have set the alliance assembly!");
 						sAlliance.setCapitalloc(location);
 						this.parent.getDatabase().save(sAlliance);
 					}
 					return true;
 				} else {
-					player.sendMessage("You are not a member of the council of this alliance");
+					player.sendMessage(ChatColor.YELLOW + "You are not a member of the council of this alliance");
 					return true;
 				}
 			}

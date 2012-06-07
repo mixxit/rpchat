@@ -23,6 +23,7 @@ import java.util.logging.Logger;
 
 import javax.persistence.PersistenceException;
 
+import net.milkbowl.vault.Vault;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.ChatColor;
@@ -69,50 +70,30 @@ public class rpchat extends JavaPlugin
   
   // MAX EXPERIENCE (level 15 atm)
   static final int maxexperience = 13600;
-  private Map<String, AreaMarker> resareas = new HashMap<String, AreaMarker>();
-  private Map<String, Marker> resmark = new HashMap<String, Marker>();
-  FileConfiguration cfg;
-  MarkerSet set;
-  long updperiod;
-  boolean use3d;
-  String infowindow;
-  String admininfowindow;
-  AreaStyle defstyle;
-  Map<String, AreaStyle> ownerstyle;
-  Set<String> visible;
-  Set<String> hidden;
-  boolean stop; 
-  int maxdepth;
-  Plugin dynmap;
-  DynmapAPI api;
-  MarkerAPI markerapi;
+
+  public boolean isInteger( String input )  
+  {  
+     try  
+     {  
+        Integer.parseInt( input );  
+        return true;  
+     }  
+     catch( Exception e)  
+     {  
+        return false;  
+     }  
+  }  
   
-  private static class AreaStyle {
-      String strokecolor;
-      double strokeopacity;
-      int strokeweight;
-      String fillcolor;
-      double fillopacity;
-      String label;
-
-      AreaStyle(FileConfiguration cfg, String path, AreaStyle def) {
-          strokecolor = cfg.getString(path+".strokeColor", def.strokecolor);
-          strokeopacity = cfg.getDouble(path+".strokeOpacity", def.strokeopacity);
-          strokeweight = cfg.getInt(path+".strokeWeight", def.strokeweight);
-          fillcolor = cfg.getString(path+".fillColor", def.fillcolor);
-          fillopacity = cfg.getDouble(path+".fillOpacity", def.fillopacity);
-          label = cfg.getString(path+".label", null);
-      }
-
-      AreaStyle(FileConfiguration cfg, String path) {
-          strokecolor = cfg.getString(path+".strokeColor", "#00FF00");
-          strokeopacity = cfg.getDouble(path+".strokeOpacity", 0);
-          strokeweight = cfg.getInt(path+".strokeWeight", 1);
-          fillcolor = cfg.getString(path+".fillColor", "#00FF00");
-          fillopacity = cfg.getDouble(path+".fillOpacity", 0.35);
-      }
+  public void setCheatBypass(Player player, boolean bool)
+  {
+	if (bool == true)
+	{
+		permission.playerAdd(player, "towny.cheat.bypass");
+	} else {
+		permission.playerRemove(player, "towny.cheat.bypass");
+	}
   }
-  
+ 
   public int getMaxExperience()
   {
 	  return this.maxexperience;
@@ -149,25 +130,7 @@ public class rpchat extends JavaPlugin
 	  return 0;
   }
   
-  public void updateSectors()
-  {
-	  Map<String,AreaMarker> newmap = new HashMap<String,AreaMarker>(); /* Build new map */
-	  
-	  List<String> alliancenames = this.getAllianceNames();
-	  for (String alliance : alliancenames)
-	  {
-	  
-		  List<sqlSector> sectors = getAllianceSectors(alliance);
-		  for (sqlSector sector : sectors)
-		  {
-			  handleSector(sector, alliance, newmap);
-		  }
-	  
-	  }
-	  resareas = newmap;
-	  //System.out.println("[RPChat-Dynmap] Scheduled to run again in " + updperiod);
-	  getServer().getScheduler().scheduleSyncDelayedTask(this, new SectorUpdate(), updperiod);
-  }
+  
   
   private Location getGreaterSectorCorner(sqlSector sector)
   {
@@ -198,186 +161,27 @@ public class rpchat extends JavaPlugin
 	  return loc;
   }
   
-  private boolean isVisible(String owner, String worldname) {
-      if((visible != null) && (visible.size() > 0)) {
-          if((visible.contains(owner) == false) && (visible.contains("world:" + worldname) == false) &&
-                  (visible.contains(worldname + "/" + owner) == false)) {
-              return false;
-          }
-      }
-      if((hidden != null) && (hidden.size() > 0)) {
-          if(hidden.contains(owner) || hidden.contains("world:" + worldname) || hidden.contains(worldname + "/" + owner))
-              return false;
-      }
-      return true;
-  }
   
-  private void addStyle(String owner, String worldid, AreaMarker m, sqlSector sector) {
-      AreaStyle as = null;
-      
-      if(!ownerstyle.isEmpty()) {
-          as = ownerstyle.get(owner.toLowerCase());
-      }
-      if(as == null)
-          as = defstyle;
-
-      int sc = 0x00FF00;
-      int fc = 0x00FF00;
-      try {
-          sc = Integer.parseInt(as.strokecolor.substring(1), 16);
-          fc = Integer.parseInt(as.fillcolor.substring(1), 16);
-      } catch (NumberFormatException nfx) {
-      }
-      m.setLineStyle(as.strokeweight, as.strokeopacity, sc);
-      m.setFillStyle(as.fillopacity, fc);
-      if(as.label != null) {
-          m.setLabel(as.label);
-      }
-  }
   
-  private void handleSector(sqlSector sector, String alliance, Map<String, AreaMarker> newmap) 
+  
+  
+  public void setPlayerRace(Player player, String racename)
   {
-	  // TODO Auto-generated method stub
-	  double[] x = null;
-	  double[] z = null;
-	  Location l0 = getLesserSectorCorner(sector);
-      Location l1 = getGreaterSectorCorner(sector);
-      
-      if(l0 == null)
-          return;
-      String wname = l0.getWorld().getName();
-      String owner = alliance;
-      /* Handle areas */
-      if(isVisible(owner, wname)) { 
-          /* Make outline */
-          x = new double[4];
-          z = new double[4];
-          
-          x[0] = l0.getX(); 
-          z[0] = l0.getZ();
-          
-          x[1] = l0.getX(); 
-          z[1] = l1.getZ()-1;
-          
-          x[2] = l1.getX()-1; 
-          z[2] = l1.getZ()-1;
-          
-          x[3] = l1.getX()-1; 
-          z[3] = l0.getZ();
-          
-          String markerid = sector.getName();
-          AreaMarker m = resareas.remove(markerid); /* Existing area? */
-          if(m == null) {
-              m = set.createAreaMarker(markerid, owner, false, wname, x, z, false);
-              if(m == null)
-                  return;
-          }
-          else {
-        	  
-              m.setCornerLocations(x, z); /* Replace corner locations */
-              m.setLabel(owner);   /* Update label */
-          }
-          if(use3d) { /* If 3D? */
-              m.setRangeY(l1.getY()+1.0, l0.getY());
-          }            
-          /* Set line and fill properties */
-          addStyle(owner, wname, m, sector);
-
-          /* Build popup */
-          String desc = formatInfoWindow(sector, m, alliance);
-          m.setDescription(desc); /* Set popup */
-
-          /* Add to map */
-          newmap.put(markerid, m);
-      }
-  }
-  
-  private class OurServerListener implements Listener {
-      @SuppressWarnings("unused")
-      @EventHandler(priority=EventPriority.MONITOR)
-      public void onPluginEnable(PluginEnableEvent event) {
-          Plugin p = event.getPlugin();
-          String name = p.getDescription().getName();
-          if(name.equals("dynmap")) {
-              if(dynmap.isEnabled())
-                  activate();
-          }
-      }
-  }
-  
-  private void activate() {
-      /* Now, get markers API */
-	  System.out.println("Activating RPChat Dynmap");
-      markerapi = api.getMarkerAPI();
-      if(markerapi == null) {
-          System.out.println("Error loading dynmap marker API!");
-          return;
-      }
-      /* Load configuration */
-      FileConfiguration cfg = getConfig();
-      cfg.options().copyDefaults(true);   /* Load defaults, if needed */
-      this.saveConfig();  /* Save updates, if needed */
-      /* Now, add marker set for mobs (make it transient) */
-      set = markerapi.getMarkerSet("sectors.markerset");
-      if(set == null)
-      {
-          set = markerapi.createMarkerSet("sectors.markerset", cfg.getString("layer.name", "Sectors"), null, false);
-      } else {
-          set.setMarkerSetLabel(cfg.getString("layer.name", "Sectors"));
-      }
-      
-      if(set == null) {
-    	  System.out.println("Error creating marker set");
-          return;
-      }
-      int minzoom = cfg.getInt("layer.minzoom", 0);
-      if(minzoom > 0)
-          set.setMinZoom(minzoom);
-      set.setLayerPriority(cfg.getInt("layer.layerprio", 9));
-      set.setHideByDefault(cfg.getBoolean("layer.hidebydefault", false));
-      use3d = cfg.getBoolean("use3dregions", false);
-      infowindow = cfg.getString("infowindow", DEF_INFOWINDOW);
-      maxdepth = cfg.getInt("maxdepth", 16);
-
-      System.out.println("Loading styles");
-      /* Get style information */
-      defstyle = new AreaStyle(cfg, "regionstyle");
-      ownerstyle = new HashMap<String, AreaStyle>();
-      ConfigurationSection sect = cfg.getConfigurationSection("ownerstyle");
-      if(sect != null) {
-          Set<String> ids = sect.getKeys(false);
-          
-          for(String id : ids) {
-              ownerstyle.put(id.toLowerCase(), new AreaStyle(cfg, "ownerstyle." + id, defstyle));
-          }
-      }
-      List<String> vis = cfg.getStringList("visibleregions");
-      if(vis != null) {
-          visible = new HashSet<String>(vis);
-      }
-      List<String> hid = cfg.getStringList("hiddenregions");
-      if(hid != null) {
-          hidden = new HashSet<String>(hid);
-      }
-
-      /* Set up update job - based on periond */
-      int per = cfg.getInt("update.period", 30);
-      if(per < 15) per = 15;
-      updperiod = (long)(per*200);
-      stop = false;
-      System.out.println("Initialising ticks");
-      getServer().getScheduler().scheduleSyncDelayedTask(this, new SectorUpdate(), 40);   /* First time is 2 seconds */
-      
-  }
-  
-  private class SectorUpdate implements Runnable {
-      public void run() {
-    	  
-          if(!stop)
-          {
-              updateSectors();
-          } else {
-          }
+	  sqlPlayer sPlayer = (sqlPlayer)this.getDatabase().find(sqlPlayer.class).where().ieq("name", player.getName()).findUnique();
+      if (sPlayer == null) {
+        sPlayer = new sqlPlayer();
+        sPlayer.setName(player.getName());
+        sPlayer.setDisplay(player.getName());
+        sPlayer.setLanguage("human");
+        sPlayer.setRace(racename);
+        sPlayer.setAlliance(this.getRaceAlliance(racename));
+        this.getDatabase().save(sPlayer);
+      }	else {
+    	  System.out.println("[RPChat] Changing " + player.getName() + " to a " + racename);
+    	  sPlayer.setRace(racename);
+    	  sPlayer.setLanguage("human");
+          sPlayer.setAlliance(this.getRaceAlliance(racename));
+    	  this.getDatabase().save(sPlayer);
       }
   }
   
@@ -395,28 +199,14 @@ public class rpchat extends JavaPlugin
 		    Long elapsed = now.getTime() - then.getTime();
 		    
 		    // every minute it will generated 0.1 gold nuggets
-		    Long resourcegained = (long)((elapsed / 60000) * 0.03);
+		    Long resourcegained = (long)((elapsed / 60000) * 0.005);
 		    count = safeLongToInt(resourcegained);
 	  }
 	  
 	  return count;
   }
   
-  private String formatInfoWindow(sqlSector sector, AreaMarker m,String alliance) {
-      String v;
-      v = "<div class=\"regioninfo\">"+infowindow+"</div>";
-      v = v.replace("%alliance%", alliance);
-      
-      v = v.replace("%stored%", Integer.toString(getSectorResource(sector)));
-      
-      return v;
-  }
   
-
-  static
-  {
-     permission = null;
-  }
   
   public int getLevelFromExp(int xp)
   {
@@ -842,7 +632,7 @@ public class rpchat extends JavaPlugin
 	  }
   }
   
-  public void setPlayerCombatExp(Player player, int amount)
+  public void setPlayerCombatExp(Player player, int amount, int changed)
   {
 	  sqlPlayer p = this.getPlayerObject(player);
 	  if (p != null)
@@ -856,7 +646,7 @@ public class rpchat extends JavaPlugin
 				  player.sendMessage("You gained a combat level!");
 			  }
 			  p.setCombatexperience(amount);
-			  player.sendMessage(ChatColor.RED + "You gained combat experience! ("+amount+")");
+			  player.sendMessage(ChatColor.RED + "You gained combat experience! ("+changed+")");
 			  this.getDatabase().save(p);
 
 		  } else {
@@ -867,7 +657,7 @@ public class rpchat extends JavaPlugin
 	  }
   }
   
-  public void setPlayerRangedExp(Player player, int amount)
+  public void setPlayerRangedExp(Player player, int amount, int changed)
   {
 	  sqlPlayer p = this.getPlayerObject(player);
 	  if (p != null)
@@ -882,7 +672,7 @@ public class rpchat extends JavaPlugin
 			  }
 			  
 			  p.setRangedexperience(amount);
-			  player.sendMessage(ChatColor.BLUE + "You gained ranged experience! ("+amount+")");
+			  player.sendMessage(ChatColor.BLUE + "You gained ranged experience! ("+changed+")");
 
 			  this.getDatabase().save(p);
 		  } else {
@@ -891,7 +681,7 @@ public class rpchat extends JavaPlugin
 		  }
 	  }
   }
-  public void setPlayerScholarlyExp(Player player, int amount)
+  public void setPlayerScholarlyExp(Player player, int amount, int changed)
   {
 	  sqlPlayer p = this.getPlayerObject(player);
 	  if (p != null)
@@ -906,7 +696,7 @@ public class rpchat extends JavaPlugin
 			  }			  
 			  
 			  p.setScholarlyexperience(amount);
-			  player.sendMessage(ChatColor.LIGHT_PURPLE + "You gained scholarly magic experience! ("+amount+")");
+			  player.sendMessage(ChatColor.LIGHT_PURPLE + "You gained scholarly magic experience! ("+changed+")");
 			  this.getDatabase().save(p);
 		  } else {
 			  p.setScholarlyexperience(maxexperience);
@@ -954,7 +744,7 @@ public class rpchat extends JavaPlugin
 	  return 0;
   }
   
-  public void setPlayerNaturalExp(Player player, int amount)
+  public void setPlayerNaturalExp(Player player, int amount, int changed)
   {
 	  sqlPlayer p = this.getPlayerObject(player);
 	  if (p != null)
@@ -969,7 +759,7 @@ public class rpchat extends JavaPlugin
 			  }	
 			  
 			  p.setNaturalexperience(amount);
-			  player.sendMessage(ChatColor.GREEN + "You gained Natural/Divine magic experience! ("+amount+")");
+			  player.sendMessage(ChatColor.GREEN + "You gained Natural/Divine magic experience! ("+changed+")");
 			  this.getDatabase().save(p);
 		  } else {
 			  p.setNaturalexperience(maxexperience);
@@ -1060,12 +850,7 @@ public class rpchat extends JavaPlugin
   public void onDisable()
   {
 	  
-	 if(set != null) {
-         set.deleteMarkerSet();
-         set = null;
-     }
-     resareas.clear();
-     stop = true;
+	 
       
      PluginDescriptionFile desc = getDescription();
      System.out.println(desc.getFullName() + " has been disabled");
@@ -1235,23 +1020,13 @@ public class rpchat extends JavaPlugin
      setupDatabase();
      
      PluginManager pm = getServer().getPluginManager();
-     /* Get dynmap */
-     dynmap = pm.getPlugin("dynmap");
-     if(dynmap == null) {
-         System.out.println("Cannot find dynmap!");
-         return;
-     }
-     api = (DynmapAPI)dynmap; /* Get API */
 
-     getServer().getPluginManager().registerEvents(new OurServerListener(), this);        
-     /* If both enabled, activate */
-     if(dynmap.isEnabled())
-         activate();
+
+      
      
 
-     if ((this.towny == null) || (getServer().getScheduler().scheduleSyncDelayedTask(this, new onLoadedTask(this), 1L) == -1))
+     if (this.towny == null)
      {
-       System.out.println("SEVERE - Could not schedule onLoadedTask.");
        this.pm.disablePlugin(this);
      }
         
@@ -1278,6 +1053,7 @@ public class rpchat extends JavaPlugin
 	 getCommand("plantflag").setExecutor(new DoPlantFlag(this));
 	 getCommand("grantflag").setExecutor(new DoGrantFlag(this));
 	 getCommand("alliance").setExecutor(new AllianceCmd(this));
+	 getCommand("setelection").setExecutor(new SetElectionCmd(this));
 	 getCommand("optin").setExecutor(new OptedinCmd(this));
 	 
 	 getCommand("reset").setExecutor(new ResetCmd(this));
@@ -1776,10 +1552,10 @@ public class rpchat extends JavaPlugin
 		if (sPlayerme.getExperience() < maxexperience)
 		{
 			
-			sPlayerme.setExperience(sPlayerme.getExperience() + 1);
+			sPlayerme.setExperience(sPlayerme.getExperience() + i);
 			this.getDatabase().save(sPlayerme);
 			System.out.println("[RPChat] Player " + attacker.getDisplayName() + "("+attacker.getName()+") earned experience!");
-			attacker.sendMessage(ChatColor.YELLOW + "* You gained experience!");
+			attacker.sendMessage(ChatColor.YELLOW + "* You gained experience! ("+i+")");
 			int newlevel = this.getPlayerLevel(attacker);
 			if (newlevel > oldlevel)
 			{
@@ -2082,6 +1858,14 @@ public class rpchat extends JavaPlugin
 		this.getDatabase().save(player);
 		targetplayer.sendMessage("You have been granted a flag!");
 	}
+	
+	public void ungrantFlag(Player targetplayer) {
+		// TODO Auto-generated method stub
+		sqlPlayer player = getPlayerObject(targetplayer);
+		player.setFlagpole(0);
+		this.getDatabase().save(player);
+		targetplayer.sendMessage("You have been denied flag permission");
+	}
 
 	public int getAllianceSectorCount(String alliance) {
 		// TODO Auto-generated method stub
@@ -2272,5 +2056,85 @@ public class rpchat extends JavaPlugin
 		}
 		
 		return false;
+	}
+
+	public String getRaceAlliance(String racename) {
+		// TODO Auto-generated method stub
+		String alliance = "unknown";
+	 	if (racename.toString().toLowerCase().equals("human")) {
+	 		alliance = "combine";
+		}
+	 	if (racename.toString().toLowerCase().equals("highelf")) {
+	 		alliance = "realm";
+	 	}
+	 	if (racename.toString().toLowerCase().equals("woodelf")) {
+	 		alliance = "realm";
+	 	}
+	 	if (racename.toString().toLowerCase().equals("halfelf")) {
+	 		alliance = "realm";
+	 	}
+	 	if (racename.toString().toLowerCase().equals("darkelf")) {
+	 		alliance = "dominion";
+	 	}
+	 	if (racename.toString().toLowerCase().equals("vampire")) {
+	 		alliance = "dominion";
+	 	}
+	 	if (racename.toString().toLowerCase().equals("barbarian")) {
+	 		alliance = "combine";
+	 	}
+	 	if (racename.toString().toLowerCase().equals("orc")) {
+	 		alliance = "legion";
+	 	}
+	 	if (racename.toString().toLowerCase().equals("ogre")) {
+	 		alliance = "legion";
+	 	}
+	 	if (racename.toString().toLowerCase().equals("troll")) {
+	 		alliance = "legion";
+	 	}
+	 	if (racename.toString().toLowerCase().equals("halfdragon")) {
+	 		alliance = "legacy";
+	 	}
+	 	if (racename.toString().toLowerCase().equals("gnome")) {
+	 		alliance = "combine";
+	 	}
+	 	if (racename.toString().toLowerCase().equals("goblin")) {
+	 		alliance = "legion";
+	 	}
+	 	if (racename.toString().toLowerCase().equals("hobbit")) {
+	 		alliance = "combine";
+	 	}
+	 	if (racename.toString().toLowerCase().equals("highhuman")) {
+	 		alliance = "combine";
+	 	}
+	 	if (racename.toString().toLowerCase().equals("undead")) {
+	 		alliance = "dominion";
+	 	}
+	 	if (racename.toString().toLowerCase().equals("dwarf")) {
+	 		alliance = "combine";
+	 	}
+	 	if (racename.toString().toLowerCase().equals("ratman")) {
+	 		alliance = "legion";
+	 	}
+	 	if (racename.toString().toLowerCase().equals("lizardman")) {
+	 		alliance = "legacy";
+	 	}
+	 	if (racename.toString().toLowerCase().equals("elemental")) {
+	 		alliance = "legion";
+	 	}
+	 	if (racename.toString().toLowerCase().equals("kobold")) {
+	 		alliance = "legion";
+	 	}
+	 	if (racename.toString().toLowerCase().equals("angel")) {
+	 		alliance = "foresworn";
+	 	}
+	 	if (racename.toString().toLowerCase().equals("fallenangel")) {
+	 		alliance = "forsaken";
+	 	}
+	 	
+	 	if (racename.toString().toLowerCase().equals("clockwork")) {
+	 		alliance = "collective";
+	 	}
+	 	
+	 	return alliance;
 	}
 }

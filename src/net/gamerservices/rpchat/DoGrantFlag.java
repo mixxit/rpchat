@@ -46,24 +46,8 @@ public class DoGrantFlag implements CommandExecutor {
 		
 		Player targetplayer = this.parent.getServer().getPlayerExact(args[0]);
 		
-		double x1 = targetplayer.getLocation().getX();
-        double y1 = targetplayer.getLocation().getY();
-        double z1 = targetplayer.getLocation().getZ();
-
-        double x2 = player.getLocation().getX();
-        double y2 = player.getLocation().getY();
-        double z2 = player.getLocation().getZ();
-
-        int xdist = (int)(x1 - x2);
-        int ydist = (int)(y1 - y2);
-        int zdist = (int)(z1 - z2);
-
-        if ((xdist < -100) || (xdist > 100) || (ydist < -100) || (ydist > 100) || (zdist < -100) || (zdist > 100))
-        {
-          player.sendMessage("You are too far away to give the flag to " + targetplayer.getName());
-          return true;
-        }
-		
+	
+        	
 		
 		if (this.parent.getPlayerAlliance(player).equals(this.parent.getPlayerAlliance(targetplayer)))
 		{
@@ -73,7 +57,8 @@ public class DoGrantFlag implements CommandExecutor {
 				this.parent.grantFlag(targetplayer);		
 				return true;
 			} else {
-				player.sendMessage("That player already has a flag");
+				player.sendMessage("The player has been denied the flag");
+				this.parent.ungrantFlag(targetplayer);	
 				return true;
 			}
 			

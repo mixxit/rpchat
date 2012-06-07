@@ -23,7 +23,7 @@ public class GetStatsCmd implements CommandExecutor {
 		Player player = (Player)arg0;
 		
 		player.sendMessage("Stats:");
-		player.sendMessage("Level: " + this.parent.getPlayerLevel(player));
+		player.sendMessage("Level: " + this.parent.getPlayerLevel(player) + " ["+this.parent.getPlayerExperience(player)+"/"+this.parent.getExpFromLevel(this.parent.getPlayerLevel(player)+1)+"]");
 		player.sendMessage("Combat Level: " + this.parent.getPlayerCombatLevel(player) + " ["+this.parent.getPlayerCombatExp(player)+"/"+this.parent.getExpFromLevel(this.parent.getPlayerCombatLevel(player)+1)+"]");
 		player.sendMessage("Ranged Level: " + this.parent.getPlayerRangedLevel(player) + " ["+this.parent.getPlayerRangedExp(player)+"/"+this.parent.getExpFromLevel(this.parent.getPlayerRangedLevel(player)+1)+"]");
 		player.sendMessage("Scholarly Magic Level: " + this.parent.getScholarlyMagicLevel(player) + " ["+this.parent.getPlayerScholarlyExp(player)+"/"+this.parent.getExpFromLevel(this.parent.getScholarlyMagicLevel(player)+1)+"]");
