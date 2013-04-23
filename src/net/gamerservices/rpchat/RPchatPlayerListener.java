@@ -1,188 +1,159 @@
- package net.gamerservices.rpchat;
- 
- import com.avaje.ebean.EbeanServer;
- import com.avaje.ebean.ExpressionList;
- import com.avaje.ebean.Query;
- import org.bukkit.ChatColor;
- import org.bukkit.entity.Player;
+package net.gamerservices.rpchat;
+
+import java.util.Date;
+import java.util.HashSet;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.World;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
- import org.bukkit.event.player.PlayerChatEvent;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.ItemStack;
 
- 
- public class RPchatPlayerListener implements Listener
- {
-   private rpchat plugin;
- 
-   @EventHandler(priority = EventPriority.HIGHEST)
-   public void onPlayerJoin(PlayerJoinEvent event)
-   {
-     sqlPlayer sPlayer = (sqlPlayer)this.plugin.getDatabase().find(sqlPlayer.class).where().ieq("name", event.getPlayer().getName()).findUnique();
-     if (sPlayer == null) {
-       sPlayer = new sqlPlayer();
-       sPlayer.setName(event.getPlayer().getName());
- 
-       sPlayer.setDisplay(event.getPlayer().getName());
-       sPlayer.setRace("human");
-       sPlayer.setLanguage("human");
-       sPlayer.setAlliance("combine");
- 
-       this.plugin.getDatabase().save(sPlayer);
-     }
- 
-     if (!sPlayer.getFlags().equals("done"))
-     {
-       event.getPlayer().sendMessage(ChatColor.RED + "*********************************************************");
-       event.getPlayer().sendMessage(ChatColor.RED + "You have been given the opportunity to reset your /race");
-       event.getPlayer().sendMessage(ChatColor.RED + "NOTE: You will lose all votes and king status if you do this");
-       event.getPlayer().sendMessage(ChatColor.RED + "*********************************************************");
-     }
 
-			 event.getPlayer().setDisplayName(sPlayer.getDisplay());
-   }
-		   
-   public RPchatPlayerListener(rpchat rpchat)
-   {
-     this.plugin = rpchat;
-   }
-   
-   @EventHandler(priority = EventPriority.HIGH)
-   public void onPlayerMove(PlayerMoveEvent event)
-   {
-	   if(!event.isCancelled()){
-		   
-		   // check if same chunk
-		   if (!event.getFrom().getChunk().equals(event.getTo().getChunk()))
-		   {
-			   // check if same dominator
-			   String sectordominator = this.plugin.getSectorDominator(this.plugin.getSectorName(event.getTo()));
-			   String oldsectordominator = this.plugin.getSectorDominator(this.plugin.getSectorName(event.getFrom()));
-			   if(!sectordominator.equals(oldsectordominator))
-			   {
-				   if (!sectordominator.equals(this.plugin.getPlayerAlliance(event.getPlayer())))
-				   {
-					   event.getPlayer().sendMessage(ChatColor.GRAY + "Sector: " + sectordominator + " - /plantflag for $$$");
-				   } else {
-					   event.getPlayer().sendMessage(ChatColor.GRAY + "Sector: " + sectordominator);
-				   }
-				   
-			   }
-		   }
-	   }
-   }
-   
-   
-   @EventHandler(priority = EventPriority.MONITOR)
-   public void onPlayerChat(PlayerChatEvent event)
-   {
-	   if(!event.isCancelled()){
-		   DoMessageToChannel(event.getPlayer(), event.getMessage());
-		   event.setCancelled(true);
-	   }
-   }
- 
-   private void DoMessageToChannel(Player player, String message) {
+public class RPchatPlayerListener implements Listener
+{
+	private rpchat plugin;
+
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event)
+	{
+		if (!event.isCancelled())
+		{
+			Date now = new Date();
+			Long timenow = now.getTime();
+			Player player = event.getPlayer();
+			PlayerCache pc = this.plugin.getPlayerCacheByNameAsync(player.getName());
+			if (pc != null)
+			{
+				if (!pc.lastcommand.equals("") && (Long.parseLong(pc.lastcommand) + 750) > timenow )
+				{
+					pc.spamcount++;
+					player.sendMessage("You are sending commands too fast and have been choked");
+					System.out.println("[RPChat] WARNING " + player.getName() + " was sending commands too fast and has been choked");
+					this.plugin.checkSpamCount(player);
+					event.setCancelled(true);
+				} else {
+					pc.lastcommand = Long.toString(timenow);
+					pc.spamcount = 0;
+				}
+			}
+		}
+	}
 	
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onPlayerJoin(PlayerJoinEvent event)
+	{
+		if (plugin.isPlayerSentry(event.getPlayer()))
+		{
+			return;
+		}
+		PlayerCache sPlayer = this.plugin.getPlayerCacheByName(event.getPlayer().getName());
+		if (!sPlayer.group.equals("") && !sPlayer.lastgroupinvite.equals(""))
+		{ 
+			System.out.println("Player " +event.getPlayer()+" joined with group data, cleared");
+			sPlayer.group = "";
+			sPlayer.lastgroupinvite = "";
+		}
+			
+		event.getPlayer().setDisplayName(sPlayer.display);
+		
+		/*
+		if (sPlayer.election < 1)
+		{
+			this.plugin.jailPlayer(event.getPlayer(),"infirmary");
+			
+		}
+		*/
+	}
 	
-	   sqlPlayer sPlayer = (sqlPlayer)this.plugin.getDatabase().find(sqlPlayer.class).where().ieq("name", player.getName()).findUnique();
-	   if (sPlayer == null) {
-		   
-		   DoLocalMessage(player, message);
-	   } else {
-		   if (sPlayer.getChatfocus().equals(""))
-		   {
-			   
-			   DoLocalMessage(player, message);
-			   
-		   }
-		   
-		   if (sPlayer.getChatfocus().equals("local"))
-		   {
-			   
-			   DoLocalMessage(player, message);
-			   
-		   }
-		   
-		   if (sPlayer.getChatfocus().equals("global"))
-		   {
-			   
-			   DoGlobalMessage(player, message);
-			   
-		   }
-		   
-		   if (sPlayer.getChatfocus().equals("town"))
-		   {
-			   
-			   DoTownMessage(player, message);
-			   
-		   }
-		   
-		   if (sPlayer.getChatfocus().equals("alliance"))
-		   {
-			   
-			   DoAllianceMessage(player, message);
-			   
-		   }
-		   
-		   if (sPlayer.getChatfocus().equals("ooc"))
-		   {
-			   
-			   DoOOCMessage(player, message);
-			   
-		   }
-		   
-		   if (sPlayer.getChatfocus().equals("race"))
-		   {
-			   
-			   DoRaceMessage(player, message);
-			   
-		   }
-		   
-	   }
-	   
-	   
 
+	
+	@EventHandler
+    public void onPlayerQuit(PlayerQuitEvent event) {
+		if (plugin.isPlayerSentry(event.getPlayer()))
+		{
+			return;
+		}
+		if (!this.plugin.getPlayerGroupAsync(event.getPlayer()).equals(""))
+		{
+			System.out.println("Removed " + event.getPlayer() + " from group on quit");
+			this.plugin.removePlayerFromGroup(event.getPlayer());
+		}
+    }
+    
+    
+	
+	@EventHandler
+	public void onPlayerKick(PlayerKickEvent event)
+	{
+		if (plugin.isPlayerSentry(event.getPlayer()))
+		{
+			return;
+		}
+		if (!this.plugin.getPlayerGroupAsync(event.getPlayer()).equals(""))
+		{
+			System.out.println("Removed " + event.getPlayer() + " from group on quit");
+			this.plugin.removePlayerFromGroup(event.getPlayer());
+		}
+
+	}
+	/*
+	@EventHandler
+	public void onPlayerDeath(PlayerDeathEvent event)
+	{
+		if (event.getEntity() instanceof Player)
+		{
+			if (plugin.isPlayerSentry(event.getEntity()))
+			{
+						return;
+			}
+			System.out.println("[RPChat] Saved player data on Death");
+		}
+	}
+	*/
+	
+	@EventHandler
+	public void onPlayerInteractEntity(PlayerInteractEntityEvent event)
+	{
+		if (event.isCancelled())
+            return;
+        if (event.getRightClicked() instanceof Player)
+        {
+        	Player target = (Player) event.getRightClicked();
+        	if(this.plugin.isPlayerNPC(target))
+        	{
+        		this.plugin.parseNpcInteract(event.getPlayer(),target);
+        	}
+        }
+		
+	}
+	public RPchatPlayerListener(rpchat rpchat)
+	{
+		this.plugin = rpchat;
+	}
+
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onPlayerChat(AsyncPlayerChatEvent event)
+	{
+		if(!event.isCancelled()){
+			this.plugin.DoAsyncChat(event.getPlayer(), event.getPlayer().getName(),event.getMessage(),event.getRecipients());
+			event.setCancelled(true);
+		}
+	}
+	
+
+	
 }
-
-private void DoTownMessage(Player playername, String message) {
-	
-	TownMessage tm = new TownMessage(this.plugin);
-	tm.sendTownChat(playername, message);
-}
-
-private void DoAllianceMessage(Player playername, String message) {
-	
-	AllianceMessage tm = new AllianceMessage(this.plugin);
-	tm.sendAllianceChat(playername, message);
-}
-
-private void DoRaceMessage(Player playername, String message) {
-	
-	RaceMessage rm = new RaceMessage(this.plugin);
-	rm.sendRaceChat(playername, message);
-}
-
-public void DoGlobalMessage(Player playername, String message)
-   {
-		GlobalMessage gm = new GlobalMessage(this.plugin);
-		gm.sendGlobal(playername, message);
-   }
- 
-   public void DoOOCMessage(Player playername, String message)
-   {
-     OOCMessage ooc = new OOCMessage(this.plugin);
-     ooc.sendOOC(playername, message);
-   }
- 
-   public void DoLocalMessage(Player playername, String message)
-   {
-     LocalMessage lm = new LocalMessage(this.plugin);
-     lm.sendLocal(playername, message);
-   }
- }
 

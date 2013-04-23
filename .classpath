@@ -2,10 +2,14 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
-	<classpathentry kind="lib" path="Z:/Vault.jar"/>
-	<classpathentry kind="lib" path="Z:/bukkit-1.2.4-R0.1-20120328.004948-9.jar"/>
-	<classpathentry kind="lib" path="Z:/dynmap-api.jar"/>
-	<classpathentry kind="lib" path="Z:/Essentials.jar"/>
-	<classpathentry kind="lib" path="Z:/Towny.jar"/>
+	<classpathentry kind="lib" path="D:/development/Essentials.jar"/>
+	<classpathentry kind="lib" path="D:/development/Towny.jar"/>
+	<classpathentry kind="lib" path="D:/development/Vault.jar"/>
+	<classpathentry kind="lib" path="D:/development/bukkit/plugins/WorldGuard.jar"/>
+	<classpathentry kind="lib" path="D:/development/bukkit/plugins/WorldEdit.jar"/>
+	<classpathentry kind="lib" path="D:/development/bukkit/plugins/Sentry.jar"/>
+	<classpathentry kind="lib" path="D:/development/bukkit-1.4.6-R0.1.jar"/>
+	<classpathentry kind="lib" path="D:/development/citizens-2.0.6-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="D:/development/craftbukkit-1.4.6-R0.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -22,26 +22,41 @@ public class SetDefaultChannel implements CommandExecutor {
 		}
 		Player player = (Player)sender;
 		
-		sqlPlayer sPlayerme = (sqlPlayer)this.parent.getDatabase().find(sqlPlayer.class).where().ieq("name", player.getName()).findUnique();
+		PlayerCache sPlayerme = this.parent.getPlayerCacheByName(player.getName());
 		if (sPlayerme == null) {
 			player.sendMessage("You cannot set your default channel while your account is being updated");
 			return true;
 		} else {
 			
 			if (args.length == 0) {
-				player.sendMessage("Default channel is currently:" + sPlayerme.getChatfocus());
+				player.sendMessage("Default channel is currently:" + sPlayerme.chatfocus);
 				return false;
 			} else {
-				if (args[0].equals("global") || args[0].equals("local") || args[0].equals("race") || args[0].equals("alliance"))
+				if (this.parent.realisticchat == true)
 				{
-					sPlayerme.setChatfocus(args[0]);
-					this.parent.getDatabase().save(sPlayerme);
-					player.sendMessage("Default channel set to:" + args[0]);
-					return true;
+					if (args[0].equals("local"))
+					{
+						sPlayerme.chatfocus = args[0];
+						player.sendMessage("Default channel set to:" + args[0]);
+						return true;
+					} else {
+						player.sendMessage("That is not a valid channel");
+						player.sendMessage("Valid Channel names: local");
+						return true;
+					}
 				} else {
-					player.sendMessage("That is not a valid channel");
-					return false;
+					if (args[0].equals("local") || args[0].equals("race") || args[0].equals("alliance")|| args[0].equals("town")|| args[0].equals("nation"))
+					{
+						sPlayerme.chatfocus= args[0];
+						player.sendMessage("Default channel set to:" + args[0]);
+						return true;
+					} else {
+						player.sendMessage("That is not a valid channel");
+						player.sendMessage("Valid Channel names: local,race,alliance");
+						return true;
+					}
 				}
+				
 					
 			}
 		}

@@ -1,6 +1,7 @@
 name: rpchat
 main: net.gamerservices.rpchat.rpchat
-version: 0.10
+version: 0.11
+depend: [Vault,Essentials,Towny]
 website: http://www.fallofanempire.com
 author: Mixxit
 database: true
@@ -8,37 +9,78 @@ description: >
              Basic localised chat functionality.
              This plugin allows a player to chat locally
 commands:
+  setelection:
+    aliases: [setel]
+    description: Sets an election type
+    usage: |
+           /<command> [name] [type]
+           Example: /<command> name type
+  setlanguage:
+    aliases: [slang]
+    description: Sets your current language
+    usage: |
+           /<command> [language]
+           Example: /<command> common
   race:
     aliases: [setrace]
     description: Sets your current race
     usage: |
            /<command> [race]
            Example: /<command> Human
-  metatron:
-    aliases: [metatron]
-    description: Summon the metatron
+  promote:
+    aliases: []
+    description: Adds user to inviteonly group
     usage: |
-           /<command> [message]
-           Example: /<command> my message
+           /<command> [onlinename]
+           Example: /<command> Mixxit
+  overlevel:
+    aliases: []
+    description: gets players overlevel
+    usage: |
+           /<command>
+           Example: /<command> 
+  reloadquests:
+    aliases: []
+    description: reloads quests
+    usage: |
+           /<command>
+           Example: /<command> 
+  demote:
+    aliases: []
+    description: Removes user to inviteonly group
+    usage: |
+           /<command> [onlinename]
+           Example: /<command> Mixxit
+  infection:
+    aliases: [inf]
+    description: Checks your infection status
+    usage: |
+           /<command> []
+           Example: /<command> 
+  random:
+    aliases: [rand]
+    description: Rolls a dice
+    usage: |
+           /<command> [sides]
+           Example: /<command> 6
+  gender:
+    aliases: [setgender]
+    description: Sets your current gender
+    usage: |
+           /<command> [race]
+           Example: /<command> male
   reset:
     aliases: [resetspec]
     description: Resets a specialisation level
     usage: |
            /<command> [spectype]
            Example: /<command> natural 
-  optin:
-    aliases: [iloveoptar]
-    description: Opts you in for global chat
-    usage: |
-           /<command> 
-           Example: /<command> 
   defaultchannel:
-    aliases: [ch]
+    aliases: [ch,setfocus]
     description: Sets your default chat channel
     usage: |
            /<command> [channel]
            Example: /<command> local
-           Valid Channel names: local,global,race,alliance 
   local:
     aliases: [l]
     description: Speaks locally
@@ -57,12 +99,30 @@ commands:
     usage: |
            /<command> [msg]
            Example: /<command> Hello, alliance!     
-  globalchat:
-    aliases: [g]
-    description: Speaks to the universe
+  nationchat:
+    aliases: [nc]
+    description: Speaks to the nation
     usage: |
            /<command> [msg]
-           Example: /<command> Hello, universe!        
+           Example: /<command> Hello, nation!   
+  groupchat:
+    aliases: [g]
+    description: Adventure group chat
+    usage: |
+           /<command> [cmd]
+           Example: /<command>   
+  group:
+    aliases: [gr]
+    description: Adventure group commands
+    usage: |
+           /<command> [msg]
+           Example: /<command> Hello, group!   
+  townchat:
+    aliases: [tc]
+    description: Speaks to the town
+    usage: |
+           /<command> [msg]
+           Example: /<command> Hello, town!        
   racechat:
     aliases: [rc]
     description: Speaks to your race
@@ -87,18 +147,6 @@ commands:
     usage: |
            /<command> [displayname]
            Example: /<command> Deborah
-  vote:
-    aliases: [votebymcname]
-    description: Votes by a minecraft name - to find a minecraft name use /findname Fakenamehere
-    usage: |
-           /<command> [minecraftname]
-           Example: /<command> Deborahz
-  doelection:
-    aliases: [doelection]
-    description: Sets yourself for election
-    usage: |
-           /<command>
-           Example: /<command>
   getstats:
     aliases: [stats]
     description: Gets your player stats
@@ -124,48 +172,12 @@ commands:
     usage: |
            /<command>
            Example: /<command> [mcaccountname] [title]
-  setcapital:
-    aliases: [scap]
-    description: Sets the capital location to your position
-    usage: |
-           /<command>
-           Example: /<command>
-  setelection:
-    aliases: [forceelection]
-    description: Sets the election status of a player
-    usage: |
-           /<command>
-           Example: /<command> [mcaccountname] [status]
   capital:
     aliases: [cap]
     description: Teleports you to your capital
     usage: |
            /<command>
            Example: /<command>
-  plantflag:
-    aliases: [plantflag]
-    description: Plants a flag at your location
-    usage: |
-           /<command>
-           Example: /<command>
-  grantflag:
-    aliases: [grantflag]
-    description: Grants a flag to an alliance member
-    usage: |
-           /<command> [mcaccountname]
-           Example: /<command> notch
-  teleport:
-    aliases: [teleport]
-    description: Teleports you to a combat zone
-    usage: |
-           /<command>
-           Example: /<command> 
-  sector:
-    aliases: [sector]
-    description: Reports information on a sector
-    usage: |
-           /<command>
-           Example: /<command> 
   who:
     aliases: [list]
     description: Lists people in your area

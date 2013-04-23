@@ -67,24 +67,16 @@ import org.bukkit.entity.Player;
      String race = "";
      race = this.parent.getPlayerRace(player);
      String alliance = this.parent.getPlayerAlliance(player);
-     System.out.println("[RPChat-EMOTE] " + player.getName() + "("+race+"):" + message);
-     String tag = "";
-     try
-     {
-       tag = this.parent.getGroups(player);
-     }
-     catch (Exception e)
-     {
-       tag = "Refugee";
-     }
- 
+    // System.out.println("[RPChat-EMOTE] " + player.getName() + "("+race+"):" + message);
+     
      int count = 0;
  
      for (Player p : player.getWorld().getPlayers())
      {
        if (p.equals(player))
        {
-         p.sendMessage(ChatColor.WHITE + "*" + this.parent.getPlayerDisplayName(player) + " " + this.parent.getPlayerLastName(player)+ " " + this.parent.getPlayerTitle(player) +ChatColor.WHITE + " " + message + "*");
+    	   PlayerCache sPlayer = this.parent.getPlayerCacheByName(player.getName());
+    	   p.sendMessage(ChatColor.GRAY + "*" + sPlayer.display + " " + sPlayer.lastname+ " " +ChatColor.GRAY + " " + message + "*");
        } else {
     	   
     	   if (!this.parent.isIgnored(player,p))
@@ -105,8 +97,8 @@ import org.bukkit.entity.Player;
 	         {
 	           continue;
 	         }
-	 
-	         p.sendMessage(ChatColor.WHITE + "*" + this.parent.getPlayerDisplayName(player) + " " + this.parent.getPlayerLastName(player)+ " " + this.parent.getPlayerTitle(player) +ChatColor.WHITE + " " + message + "*");
+        	 PlayerCache sPlayer = this.parent.getPlayerCacheByName(player.getName());
+	    	 p.sendMessage(ChatColor.GRAY + "*" + sPlayer.display + " " + sPlayer.lastname+ " " +ChatColor.GRAY + " " + message + "*");
 	         count++;
     	   }
        }

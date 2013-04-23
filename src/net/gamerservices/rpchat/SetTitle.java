@@ -55,7 +55,8 @@ public class SetTitle implements CommandExecutor {
 		} else {
 
 
-			this.parent.setPlayerTitle(player, this.parent.getServer().getPlayer(args[0]), title);
+			this.parent.setPlayerTitle(player, this.parent.getServer().getPlayerExact(args[0]), title);
+			
 		}
 		return true;
 	}

@@ -39,10 +39,13 @@ public class sqlPlayer
 	private String race = "";
 	
 	@Length(max=32)
+	private String gender = "";
+	
+	@Length(max=32)
 	@NotEmpty
 	private String language = "";
 	
-	@Length(max=32)
+	@Length(max=512000)
 	private String flags = "";
 	private int flagpole = 0;
 	private int killcount;
@@ -67,11 +70,22 @@ public class sqlPlayer
 	private int naturalexperience;
 	private int power;
 	
+	@Length(max=128)
+	private String languageflags = "";
+	
 	@Length(max=32)
 	private String lastmeditate = "";
 	
 	@Length(max=32)
 	private String optedin = "";
+	
+	@Length(max=32)
+	private String birthstamp = "";
+	
+	@Length(max=32)
+	private String suffix = "";
+	
+	private int hitpoints;
 	
 	public void setId(int id) { this.id = id; }
 	
@@ -86,6 +100,8 @@ public class sqlPlayer
 	{
 		return this.flagpole;
 	}
+	
+	
 	
 	public void setKillcount(int count)
 	{
@@ -288,4 +304,51 @@ public class sqlPlayer
 	public String getOptedin() {
 		return this.optedin;
 	}
+	
+	public void setGender(String gender)
+	{
+		this.gender = gender;
+	}
+	
+	public String getGender() {
+		return this.gender;
+	}
+	
+	public void setBirthstamp(String timestamp)
+	{
+		this.birthstamp = birthstamp;
+	}
+	
+	public String getBirthstamp() {
+		return this.birthstamp;
+	}
+	
+	
+	public void setSuffix(String suffix)
+	{
+		this.suffix = suffix;
+	}
+	
+	public String getSuffix() {
+		return this.suffix;
+	}
+
+	public void setHitpoints(int amount) {
+		// TODO Auto-generated method stub
+		this.hitpoints = amount;
+	}
+	public int getHitpoints() {
+		// TODO Auto-generated method stub
+		return this.hitpoints;
+	}
+	
+	public void setLanguageflags(String languageflags)
+	{
+		this.languageflags = languageflags;
+	}
+	
+	public String getLanguageflags() {
+		return this.languageflags;
+	}
+	
 }

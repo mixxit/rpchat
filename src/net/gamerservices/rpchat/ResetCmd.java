@@ -34,15 +34,16 @@ public class ResetCmd implements CommandExecutor {
 			int level = this.parent.getPlayerCombatLevel(player);
 			if (level > 1)
 			{
-				sqlPlayer sPlayer = this.parent.getPlayerObject(player);
-				sPlayer.setCombatexperience(this.parent.getExpFromLevel(level-1));
-				this.parent.getDatabase().save(sPlayer);
-				player.sendMessage("Your level was reset to: " + this.parent.getLevelFromExp(sPlayer.getCombatexperience()));
+				PlayerCache sPlayer = this.parent.getPlayerCacheByName(player.getName());
+				sPlayer.combatexperience = this.parent.getExpFromLevel(level-1);
+				player.sendMessage("Your level was reset to: " + this.parent.getLevelFromExp(sPlayer.combatexperience));
 				return true;
 
 
 			} else {
-				player.sendMessage("You are already at the lowest level");
+				player.sendMessage("Speciality level completely reset");
+				PlayerCache sPlayer = this.parent.getPlayerCacheByName(player.getName());
+				sPlayer.combatexperience = 0;
 				return true;
 
 			}
@@ -54,15 +55,16 @@ public class ResetCmd implements CommandExecutor {
 			int level = this.parent.getPlayerRangedLevel(player);
 			if (level > 1)
 			{
-				sqlPlayer sPlayer = this.parent.getPlayerObject(player);
-				sPlayer.setRangedexperience(this.parent.getExpFromLevel(level-1));
-				this.parent.getDatabase().save(sPlayer);
-				player.sendMessage("Your level was reset to: " + this.parent.getLevelFromExp(sPlayer.getRangedexperience()));
+				PlayerCache sPlayer = this.parent.getPlayerCacheByName(player.getName());
+				sPlayer.rangedexperience = this.parent.getExpFromLevel(level-1);
+				player.sendMessage("Your level was reset to: " + this.parent.getLevelFromExp(sPlayer.rangedexperience));
 				return true;
 
 
 			} else {
-				player.sendMessage("You are already at the lowest level");
+				player.sendMessage("Speciality level completely reset");
+				PlayerCache sPlayer = this.parent.getPlayerCacheByName(player.getName());
+				sPlayer.rangedexperience = 0;
 				return true;
 
 			}
@@ -73,15 +75,16 @@ public class ResetCmd implements CommandExecutor {
 			int level = this.parent.getScholarlyMagicLevel(player);
 			if (level > 1)
 			{
-				sqlPlayer sPlayer = this.parent.getPlayerObject(player);
-				sPlayer.setScholarlyexperience(this.parent.getExpFromLevel(level-1));
-				this.parent.getDatabase().save(sPlayer);
-				player.sendMessage("Your level was reset to: " + this.parent.getLevelFromExp(sPlayer.getScholarlyexperience()));
+				PlayerCache sPlayer = this.parent.getPlayerCacheByName(player.getName());
+				sPlayer.scholarlyexperience = this.parent.getExpFromLevel(level-1);
+				player.sendMessage("Your level was reset to: " + this.parent.getLevelFromExp(sPlayer.scholarlyexperience));
 				return true;
 
 
 			} else {
-				player.sendMessage("You are already at the lowest level");
+				player.sendMessage("Speciality level completely reset");
+				PlayerCache sPlayer = this.parent.getPlayerCacheByName(player.getName());
+				sPlayer.scholarlyexperience = 0;
 				return true;
 
 			}
@@ -92,15 +95,16 @@ public class ResetCmd implements CommandExecutor {
 			int level = this.parent.getNaturalMagicLevel(player);
 			if (level > 1)
 			{
-				sqlPlayer sPlayer = this.parent.getPlayerObject(player);
-				sPlayer.setNaturalexperience(this.parent.getExpFromLevel(level-1));
-				this.parent.getDatabase().save(sPlayer);
-				player.sendMessage("Your level was reset to: " + this.parent.getLevelFromExp(sPlayer.getNaturalexperience()));
+				PlayerCache sPlayer = this.parent.getPlayerCacheByName(player.getName());
+				sPlayer.naturalexperience = this.parent.getExpFromLevel(level-1);
+				player.sendMessage("Your level was reset to: " + this.parent.getLevelFromExp(sPlayer.naturalexperience));
 				return true;
 
 				
 			} else {
-				player.sendMessage("You are already at the lowest level");
+				player.sendMessage("Speciality level completely reset");
+				PlayerCache sPlayer = this.parent.getPlayerCacheByName(player.getName());
+				sPlayer.naturalexperience = 0;
 				return true;
 
 			}

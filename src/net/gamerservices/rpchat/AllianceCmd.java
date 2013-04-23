@@ -32,16 +32,16 @@ public class AllianceCmd implements CommandExecutor {
 		
 		if (args.length == 0) {
 			// go to alliance assembly
-			sqlPlayer sPlayerme = (sqlPlayer)this.parent.getDatabase().find(sqlPlayer.class).where().ieq("name", player.getName()).findUnique();
+			PlayerCache sPlayerme = this.parent.getPlayerCacheByName(player.getName());
 			if (sPlayerme == null) {
 				player.sendMessage("You cannot goto the capital while your account is being updated");
 				return true;
 			} else {
 				
-				sqlAlliances sAlliance = (sqlAlliances)this.parent.getDatabase().find(sqlAlliances.class).where().ieq("name", sPlayerme.getAlliance()).findUnique();
+				sqlAlliances sAlliance = (sqlAlliances)this.parent.getDatabase().find(sqlAlliances.class).where().ieq("name", sPlayerme.alliance).findUnique();
 				if (sAlliance == null) {
 					sAlliance = new sqlAlliances();
-					sAlliance.setName(sPlayerme.getAlliance());
+					sAlliance.setName(sPlayerme.alliance);
 					this.parent.getDatabase().save(sAlliance);
 					player.sendMessage("Your capital is not set");
 					return true;
@@ -67,10 +67,10 @@ public class AllianceCmd implements CommandExecutor {
 		
 		if (!this.parent.isKing(player))
 		{
-			player.sendMessage(ChatColor.YELLOW + "Only King's can access the Alliance sub commands");
+			player.sendMessage(ChatColor.YELLOW + "Only Royalty can access the Alliance sub commands");
 			return true;
 		}
-		
+		/*
 		if (args[0].toString().toLowerCase().equals("withdraw"))
 		{
 			String alliance = this.parent.getPlayerAlliance(player);
@@ -114,22 +114,29 @@ public class AllianceCmd implements CommandExecutor {
 			}
 			
 		}
+		*/
 		
 		if (args[0].equals("set"))
 		{
-			sqlPlayer sPlayerme = (sqlPlayer)this.parent.getDatabase().find(sqlPlayer.class).where().ieq("name", player.getName()).findUnique();
+			if (this.parent.isPlayerInRegion(player, "inviteonly"))
+			{
+				player.sendMessage("You cannot set a capital inside an Invite Only region");
+				return true;
+			}
+			
+			PlayerCache sPlayerme = this.parent.getPlayerCacheByName(player.getName());
 			if (sPlayerme == null) {
 				player.sendMessage(ChatColor.YELLOW + "You cannot set the alliance assembly while your account is being updated");
 				return true;
 			} else {
 				
-				if (sPlayerme.getElection() == 2)
+				if (sPlayerme.election == 2)
 				{
 					
-					sqlAlliances sAlliance = (sqlAlliances)this.parent.getDatabase().find(sqlAlliances.class).where().ieq("name", sPlayerme.getAlliance()).findUnique();
+					sqlAlliances sAlliance = (sqlAlliances)this.parent.getDatabase().find(sqlAlliances.class).where().ieq("name", sPlayerme.alliance).findUnique();
 					if (sAlliance == null) {
 						sAlliance = new sqlAlliances();
-						sAlliance.setName(sPlayerme.getAlliance());
+						sAlliance.setName(sPlayerme.alliance);
 						String world = player.getWorld().getName();
 						Double x = player.getLocation().getX();
 						Double y = player.getLocation().getY();

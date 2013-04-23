@@ -29,12 +29,12 @@ public class FindName implements CommandExecutor {
 			return false;
 			
 		} else {
-			sqlPlayer sPlayer = (sqlPlayer)this.parent.getDatabase().find(sqlPlayer.class).where().ieq("display", arg3[0]).findUnique();
+			PlayerCache sPlayer = this.parent.getPlayerCacheByNameAsync(arg3[0]);
 			if (sPlayer == null) {
 				player.sendMessage("That name cannot be found");
 				return true;
 			} else {
-				player.sendMessage(sPlayer.getDisplay() + "'s minecraft account name is " + sPlayer.getName());
+				player.sendMessage(sPlayer.display + "'s minecraft account name is " + sPlayer.name);
 				return true;
 			}
 			

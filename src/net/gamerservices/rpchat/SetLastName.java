@@ -23,18 +23,10 @@ public class SetLastName implements CommandExecutor {
 		}
 		Player player = (Player)sender;
 		
-		sqlPlayer sPlayer = (sqlPlayer)this.parent.getDatabase().find(sqlPlayer.class).where().ieq("name", player.getName()).findUnique();
-		if (sPlayer == null) {
-			sPlayer = new sqlPlayer();
-			sPlayer.setName(player.getName());
-			sPlayer.setDisplay(player.getName());
-			sPlayer.setRace("human");
-			sPlayer.setLanguage("human");
-			sPlayer.setAlliance("combine");
-			this.parent.getDatabase().save(sPlayer);
-		}
+		PlayerCache sPlayer = this.parent.getPlayerCacheByName(player.getName());
+		
 		if (arg3.length == 0) {
-			player.sendMessage(ChatColor.LIGHT_PURPLE + "Your current lastname is: " + sPlayer.getLastname());
+			player.sendMessage(ChatColor.LIGHT_PURPLE + "Your current lastname is: " + sPlayer.lastname);
 			player.sendMessage(ChatColor.LIGHT_PURPLE + "To set a new lastname use the: '/lastname lastame' command");
 			return true;
 			
@@ -42,17 +34,17 @@ public class SetLastName implements CommandExecutor {
 		
 		if (arg3[0].matches("clear"))
 		{
-			sPlayer.setLastname("");
-			this.parent.getDatabase().save(sPlayer);
+			sPlayer.lastname = "";
 			player.sendMessage("Your lastname has been cleared");
+			sPlayer.decoration = this.parent.getDecoration(sPlayer);
 			return true;
 		}
 		
 		if (arg3[0].matches("^[a-zA-Z]+$"))
 		{
-			sPlayer.setLastname(arg3[0].toString().toLowerCase());
-			this.parent.getDatabase().save(sPlayer);
+			sPlayer.lastname = arg3[0].toString().toLowerCase();
 			player.sendMessage("Your lastname is now: " + arg3[0]);
+			sPlayer.decoration = this.parent.getDecoration(sPlayer);
 			return true;
 		} else {
 
