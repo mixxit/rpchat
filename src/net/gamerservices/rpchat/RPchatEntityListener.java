@@ -147,14 +147,17 @@ public class RPchatEntityListener implements Listener
 			{
 				if (attacker.getItemInHand().getType().equals(Material.DIAMOND_SWORD))
 				{
-					if (attacker.getItemInHand().getItemMeta().getLore().get(0).contains("Encrusted Sword"))
+					if (attacker.getItemInHand().getItemMeta().hasLore())
 					{
-						String parts[] = attacker.getItemInHand().getItemMeta().getLore().get(0).split(" ");
-						String type = parts[0];
-						Metal metal = this.plugin.getMetal(type);
-						if (metal != null)
+						if (attacker.getItemInHand().getItemMeta().getLore().get(0).contains("Encrusted Sword"))
 						{
-							event.setDamage(event.getDamage()+metal.value);
+							String parts[] = attacker.getItemInHand().getItemMeta().getLore().get(0).split(" ");
+							String type = parts[0];
+							Metal metal = this.plugin.getMetal(type);
+							if (metal != null)
+							{
+								event.setDamage(event.getDamage()+metal.value);
+							}
 						}
 					}
 				}

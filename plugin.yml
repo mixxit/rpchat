@@ -1,7 +1,7 @@
 name: rpchat
 main: net.gamerservices.rpchat.rpchat
-version: 1.01
-depend: [Vault,Essentials,Towny]
+version: 1.011
+depend: [Vault,Essentials]
 website: http://www.fallofanempire.com
 author: Mixxit
 database: true

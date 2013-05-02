@@ -889,11 +889,14 @@ public class rpchat extends JavaPlugin
 
 	public void setCheatBypass(Player player, boolean bool)
 	{
-		if (bool == true)
+		if (isTownyEnabled())
 		{
-			permission.playerAdd(player, "towny.cheat.bypass");
-		} else {
-			permission.playerRemove(player, "towny.cheat.bypass");
+			if (bool == true)
+			{
+				permission.playerAdd(player, "towny.cheat.bypass");
+			} else {
+				permission.playerRemove(player, "towny.cheat.bypass");
+			}
 		}
 	}
 
@@ -911,42 +914,52 @@ public class rpchat extends JavaPlugin
 	public String getPlayerStandingInTownName(Player player)
 	{
 	 
-		try {
-			Coord coord = Coord.parseCoord(player);
-			TownyWorld world = TownyUniverse.getDataSource().getWorld(player.getWorld().getName());
-
-			TownBlock townblock = world.getTownBlock(coord);
-			
-			return townblock.getTown().getName();
-			
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			//System.out.println("isPlayerInTownCalled: " + e.getMessage());
-			return "";
+		if (isTownyEnabled())
+		{
+			try {
+				Coord coord = Coord.parseCoord(player);
+				TownyWorld world = TownyUniverse.getDataSource().getWorld(player.getWorld().getName());
+	
+				TownBlock townblock = world.getTownBlock(coord);
+				
+				return townblock.getTown().getName();
+				
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				//System.out.println("isPlayerInTownCalled: " + e.getMessage());
+				return "";
+			}
 		}
+		
+		return "";
 	} 
 	
 	public boolean isPlayerInTownCalled(Player player, String town)
 	{
 	 
-		try {
-			Coord coord = Coord.parseCoord(player);
-			TownyWorld world = TownyUniverse.getDataSource().getWorld(player.getWorld().getName());
-
-			TownBlock townblock = world.getTownBlock(coord);
-			
-			if (townblock.getTown().getName().equals(town))
-			{
-				return true;
-			} else {
+		if (isTownyEnabled())
+		{
+			try {
+				Coord coord = Coord.parseCoord(player);
+				TownyWorld world = TownyUniverse.getDataSource().getWorld(player.getWorld().getName());
+	
+				TownBlock townblock = world.getTownBlock(coord);
+				
+				if (townblock.getTown().getName().equals(town))
+				{
+					return true;
+				} else {
+					return false;
+				}
+				
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				//System.out.println("isPlayerInTownCalled: " + e.getMessage());
 				return false;
 			}
-			
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			//System.out.println("isPlayerInTownCalled: " + e.getMessage());
-			return false;
 		}
+		
+		return false;
 	} 
 	
 	public String getClassTitle(PlayerCache sPlayer)
@@ -1106,87 +1119,96 @@ public class rpchat extends JavaPlugin
 	
 	public boolean isPlayerInOtherPlayersTown(Player player)
 	{
-		// lets just check if they have permission to build there it will save alot of code checks
-		Block block = player.getLocation().getBlock();
-		boolean permission = PlayerCacheUtil.getCachePermission(player, block.getLocation(), block.getTypeId(), block.getData(), TownyPermission.ActionType.DESTROY);
-		if (permission == true)
+		if (isTownyEnabled())
 		{
-			// has permission, is not in otherplayers town he cant build in so return FALSE
-			return false;
-		} else {
-			// doesnt have permission, must be in otherplayers town he cant build in so return TRUE
-			return true;
-		}
-		
-		/*
-		try {
-			Coord coord = Coord.parseCoord(player);
-			TownyWorld world = TownyUniverse.getDataSource().getWorld(player.getWorld().getName());
-
-			TownBlock townblock = world.getTownBlock(coord);
-			
-			
-			List<Resident> residents = this.towny.getTownyUniverse().getActiveResidents();
-			for (Resident resident : residents)
-			{
-				if (resident.getName().equals(player.getName()))
+				// lets just check if they have permission to build there it will save alot of code checks
+				Block block = player.getLocation().getBlock();
+				boolean permission = PlayerCacheUtil.getCachePermission(player, block.getLocation(), block.getTypeId(), block.getData(), TownyPermission.ActionType.DESTROY);
+				if (permission == true)
 				{
-					try
-					{
-						if (resident.getTown().equals(townblock.getTown()))
-						{
-							// we are a member of a town and part of this town
-							return false;
-						} else {
-							// we are a member of a town and not in this particular town!
-							// are we in an embasy?
-							townblock.
-							
-
-							return true;
-						}
-					} catch (Exception e)
-					{
-						// check for resident not in a town
-						if (!(townblock.getTown() == null))
-						{
-							// we are in a town block and not a member of a town ourselves!
-							return true;
-						}
-						
-						// we are not in a town 
-						return false;
-					}
+					// has permission, is not in otherplayers town he cant build in so return FALSE
+					return false;
+				} else {
+					// doesnt have permission, must be in otherplayers town he cant build in so return TRUE
+					return true;
 				}
-			}
-			
-			return false;
-
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			System.out.println("isPlayerInOtherPlayersTown: " + e.getMessage());
-			return false;
+				
+				/*
+				try {
+					Coord coord = Coord.parseCoord(player);
+					TownyWorld world = TownyUniverse.getDataSource().getWorld(player.getWorld().getName());
+		
+					TownBlock townblock = world.getTownBlock(coord);
+					
+					
+					List<Resident> residents = this.towny.getTownyUniverse().getActiveResidents();
+					for (Resident resident : residents)
+					{
+						if (resident.getName().equals(player.getName()))
+						{
+							try
+							{
+								if (resident.getTown().equals(townblock.getTown()))
+								{
+									// we are a member of a town and part of this town
+									return false;
+								} else {
+									// we are a member of a town and not in this particular town!
+									// are we in an embasy?
+									townblock.
+									
+		
+									return true;
+								}
+							} catch (Exception e)
+							{
+								// check for resident not in a town
+								if (!(townblock.getTown() == null))
+								{
+									// we are in a town block and not a member of a town ourselves!
+									return true;
+								}
+								
+								// we are not in a town 
+								return false;
+							}
+						}
+					}
+					
+					return false;
+		
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					System.out.println("isPlayerInOtherPlayersTown: " + e.getMessage());
+					return false;
+				}
+				*/
 		}
-		*/
+		return false;
 	}
 
 	public boolean isPlayerInPVPArea(Player player)
 	{
-		try {
-			Coord coord = Coord.parseCoord(player);
-			TownyWorld world = TownyUniverse.getDataSource().getWorld(player.getWorld().getName());
-
-			TownBlock townblock = world.getTownBlock(coord);
-
-			if ((townblock.getTown().isPVP() || world.isForcePVP() || townblock.getPermissions().pvp))
-			{
+		if (isTownyEnabled())
+		{
+			try {
+				Coord coord = Coord.parseCoord(player);
+				TownyWorld world = TownyUniverse.getDataSource().getWorld(player.getWorld().getName());
+	
+				TownBlock townblock = world.getTownBlock(coord);
+	
+				if ((townblock.getTown().isPVP() || world.isForcePVP() || townblock.getPermissions().pvp))
+				{
+					return true;
+				} else {
+					return false;
+				}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				//System.out.println("isPlayerInPVPArea: " + e.getMessage());
 				return true;
-			} else {
-				return false;
 			}
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			//System.out.println("isPlayerInPVPArea: " + e.getMessage());
+		} else {
 			return true;
 		}
 	}
@@ -2736,11 +2758,6 @@ public class rpchat extends JavaPlugin
 			}, 2000L, 3000L);
 			
 
-		if (this.towny == null)
-		{
-			this.pm.disablePlugin(this);
-		}
-
 		getCommand("local").setExecutor(new Message("local",this));
 		getCommand("racechat").setExecutor(new Message("race",this));
 		getCommand("race").setExecutor(new SetRace(this));
@@ -3986,187 +4003,213 @@ public class rpchat extends JavaPlugin
 			player.sendMessage(ChatColor.GRAY + "* You speak but nobody hears you (There is no-one from your race online.)");
 		}
 	}
+	
+	public boolean isTownyEnabled()
+	{
+		Plugin test = this.pm.getPlugin("Towny");
+		if ((test != null) && ((test instanceof Towny)))
+		{
+			return true;
+		} else {
+			return false;
+			
+		}
+		
+	}
 
 
 	public void DoCachedTownMessage(Player player,String decoration, String message, Set<Player> recipients) {
 		// TODO Auto-generated method stub
-		if (this.isMuted(player))
-		{
-			return;
-		}
 		
-		//System.out.println("[RPChat-Town] " + player.getName() + ":"+  message);
-		String race = this.getCachedPlayerRace(player.getName());
-		try
+		if (isTownyEnabled())
 		{
-			List<Resident> residents = this.towny.getTownyUniverse().getActiveResidents();
-			int residentfound = 0;
-
-			for (Resident resident : residents)
+		
+			if (this.isMuted(player))
 			{
-				if (resident.getName().equals(player.getName()))
+				return;
+			}
+			
+			//System.out.println("[RPChat-Town] " + player.getName() + ":"+  message);
+			String race = this.getCachedPlayerRace(player.getName());
+			try
+			{
+				List<Resident> residents = this.towny.getTownyUniverse().getActiveResidents();
+				int residentfound = 0;
+	
+				for (Resident resident : residents)
 				{
-					Resident res = resident;
-					residentfound = 1;
-					
-					String town = "";
-					try
+					if (resident.getName().equals(player.getName()))
 					{
-						town = res.getTown().getName();
-					}
-					catch (Exception e)
-					{
-						town = "";
-						player.sendMessage("You cannot send a message to your town as you are not in one.");
-						return;
-					}
-
-					int count = 0;
-					for (Player p : recipients)
-					{
-						if (p.equals(player))
+						Resident res = resident;
+						residentfound = 1;
+						
+						String town = "";
+						try
 						{
-							PlayerReceiveMessage(p,player,"town",decoration,message);
-						} else {
-							for (Resident targetresident : residents)
+							town = res.getTown().getName();
+						}
+						catch (Exception e)
+						{
+							town = "";
+							player.sendMessage("You cannot send a message to your town as you are not in one.");
+							return;
+						}
+	
+						int count = 0;
+						for (Player p : recipients)
+						{
+							if (p.equals(player))
 							{
-
-								if (targetresident.getName().equals(p.getName()))
+								PlayerReceiveMessage(p,player,"town",decoration,message);
+							} else {
+								for (Resident targetresident : residents)
 								{
-									Resident targetres = targetresident;
-									try
+	
+									if (targetresident.getName().equals(p.getName()))
 									{
-										if (!targetres.getTown().equals(res.getTown()))
-											continue;
-										if (!this.isIgnored(player,p))
+										Resident targetres = targetresident;
+										try
 										{
-											PlayerReceiveMessage(p,player,"town",decoration,message);
-											count++;
+											if (!targetres.getTown().equals(res.getTown()))
+												continue;
+											if (!this.isIgnored(player,p))
+											{
+												PlayerReceiveMessage(p,player,"town",decoration,message);
+												count++;
+											}
 										}
-									}
-									catch (Exception localException1)
-									{
+										catch (Exception localException1)
+										{
+										}
 									}
 								}
 							}
 						}
+						if (count < 1)
+						{
+							player.sendMessage(ChatColor.GRAY + "* You speak but nobody hears you (There is no-one online in this town)");
+						}
+						if (residentfound == 1)
+						{
+							break;
+						}
 					}
-					if (count < 1)
-					{
-						player.sendMessage(ChatColor.GRAY + "* You speak but nobody hears you (There is no-one online in this town)");
-					}
-					if (residentfound == 1)
-					{
-						break;
-					}
+	
 				}
-
-			}
-			if (residentfound == 0)
+				if (residentfound == 0)
+				{
+					player.sendMessage(ChatColor.GRAY + "* You do not appear to be in a town");
+				}
+			} catch (Exception e)
 			{
-				player.sendMessage(ChatColor.GRAY + "* You do not appear to be in a town");
+	
 			}
-		} catch (Exception e)
-		{
-
+		
+		} else {
+			player.sendMessage("This function is only available to servers running Towny");
 		}
 	}
 
 
 	public void DoCachedNationMessage(Player player,String decoration, String message, Set<Player> recipients) {
 		// TODO Auto-generated method stub
-		if (this.isMuted(player))
+		if (isTownyEnabled())
 		{
-			return;
-		}
-		//System.out.println("[RPChat-Nation] " + player.getName() + ":"+  message);
-
-		String race = "";
-		race = this.getCachedPlayerRace(player.getName());
-		try
-		{
-			List<Resident> residents = this.towny.getTownyUniverse().getActiveResidents();
-
-			int residentfound = 0;
-
-			for (Resident resident : residents)
+			if (this.isMuted(player))
 			{
-				if (resident.getName().equals(player.getName()))
+				return;
+			}
+			//System.out.println("[RPChat-Nation] " + player.getName() + ":"+  message);
+	
+			String race = "";
+			race = this.getCachedPlayerRace(player.getName());
+			try
+			{
+				List<Resident> residents = this.towny.getTownyUniverse().getActiveResidents();
+	
+				int residentfound = 0;
+	
+				for (Resident resident : residents)
 				{
-					Resident res = resident;
-					residentfound = 1;
-					String town = "";
-					try
+					if (resident.getName().equals(player.getName()))
 					{
-						town = res.getTown().getName();
-					}
-					catch (Exception e)
-					{
-						town = "";
-						player.sendMessage("You cannot send a message to your nation as you are not in a town.");
-						return;
-					}
-
-					String nation = "";
-					try
-					{
-						nation = res.getTown().getNation().getName();
-					}
-					catch (Exception e)
-					{
-						nation = "";
-						player.sendMessage("You cannot send a message to your nation as you are not in one.");
-						return;
-					}
-
-					int count = 0;
-					for (Player p : recipients)
-					{
-						if (p.equals(player))
+						Resident res = resident;
+						residentfound = 1;
+						String town = "";
+						try
 						{
-							PlayerReceiveMessage(p,player,"nation",decoration,message);
-						} else {
-							for (Resident targetresident : residents)
+							town = res.getTown().getName();
+						}
+						catch (Exception e)
+						{
+							town = "";
+							player.sendMessage("You cannot send a message to your nation as you are not in a town.");
+							return;
+						}
+	
+						String nation = "";
+						try
+						{
+							nation = res.getTown().getNation().getName();
+						}
+						catch (Exception e)
+						{
+							nation = "";
+							player.sendMessage("You cannot send a message to your nation as you are not in one.");
+							return;
+						}
+	
+						int count = 0;
+						for (Player p : recipients)
+						{
+							if (p.equals(player))
 							{
-
-								if (targetresident.getName().equals(p.getName()))
+								PlayerReceiveMessage(p,player,"nation",decoration,message);
+							} else {
+								for (Resident targetresident : residents)
 								{
-									Resident targetres = targetresident;
-									try
+	
+									if (targetresident.getName().equals(p.getName()))
 									{
-										if (!targetres.getTown().getNation().equals(res.getTown().getNation()))
-											continue;
-										if (!this.isIgnored(player,p))
+										Resident targetres = targetresident;
+										try
 										{
-											PlayerReceiveMessage(p,player,"nation",decoration,message);
-											count++;
+											if (!targetres.getTown().getNation().equals(res.getTown().getNation()))
+												continue;
+											if (!this.isIgnored(player,p))
+											{
+												PlayerReceiveMessage(p,player,"nation",decoration,message);
+												count++;
+											}
 										}
-									}
-									catch (Exception localException1)
-									{
+										catch (Exception localException1)
+										{
+										}
 									}
 								}
 							}
 						}
+						if (count < 1)
+						{
+							player.sendMessage(ChatColor.GRAY + "* You speak but nobody hears you (There is no-one online in this nation)");
+						}
 					}
-					if (count < 1)
+	
+					if (residentfound == 1)
 					{
-						player.sendMessage(ChatColor.GRAY + "* You speak but nobody hears you (There is no-one online in this nation)");
+						break;
 					}
 				}
-
-				if (residentfound == 1)
+				if (residentfound == 0)
 				{
-					break;
+					player.sendMessage(ChatColor.GRAY + "* You do not appear to be in a nation");
 				}
-			}
-			if (residentfound == 0)
+			} catch (Exception e)
 			{
-				player.sendMessage(ChatColor.GRAY + "* You do not appear to be in a nation");
+	
 			}
-		} catch (Exception e)
-		{
-
+		} else {
+			player.sendMessage("This function is only available to servers running Towny");
 		}
 	}
 
