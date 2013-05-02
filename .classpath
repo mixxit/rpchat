@@ -2,14 +2,14 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
-	<classpathentry kind="lib" path="D:/development/Essentials.jar"/>
-	<classpathentry kind="lib" path="D:/development/Towny.jar"/>
-	<classpathentry kind="lib" path="D:/development/Vault.jar"/>
-	<classpathentry kind="lib" path="D:/development/bukkit/plugins/WorldGuard.jar"/>
-	<classpathentry kind="lib" path="D:/development/bukkit/plugins/WorldEdit.jar"/>
-	<classpathentry kind="lib" path="D:/development/bukkit/plugins/Sentry.jar"/>
-	<classpathentry kind="lib" path="D:/development/bukkit-1.4.6-R0.1.jar"/>
-	<classpathentry kind="lib" path="D:/development/citizens-2.0.6-SNAPSHOT.jar"/>
-	<classpathentry kind="lib" path="D:/development/craftbukkit-1.4.6-R0.1.jar"/>
+	<classpathentry kind="lib" path="Z:/Development/citizens-2.0.6-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="Z:/Development/craftbukkit-1.5.1-R0.2.jar"/>
+	<classpathentry kind="lib" path="Z:/Development/bukkit-1.5.1-R0.2.jar"/>
+	<classpathentry kind="lib" path="Z:/Development/bukkit/plugins/Towny.jar"/>
+	<classpathentry kind="lib" path="Z:/Development/bukkit/plugins/Vault.jar"/>
+	<classpathentry kind="lib" path="Z:/Development/bukkit/plugins/WorldEdit.jar"/>
+	<classpathentry kind="lib" path="Z:/Development/bukkit/plugins/WorldGuard.jar"/>
+	<classpathentry kind="lib" path="Z:/Development/bukkit/plugins/Essentials.jar"/>
+	<classpathentry kind="lib" path="Z:/Development/Sentry.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

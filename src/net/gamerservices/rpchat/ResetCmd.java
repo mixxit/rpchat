@@ -37,6 +37,7 @@ public class ResetCmd implements CommandExecutor {
 				PlayerCache sPlayer = this.parent.getPlayerCacheByName(player.getName());
 				sPlayer.combatexperience = this.parent.getExpFromLevel(level-1);
 				player.sendMessage("Your level was reset to: " + this.parent.getLevelFromExp(sPlayer.combatexperience));
+				this.parent.updatePlayerScore(player);
 				return true;
 
 
@@ -44,6 +45,7 @@ public class ResetCmd implements CommandExecutor {
 				player.sendMessage("Speciality level completely reset");
 				PlayerCache sPlayer = this.parent.getPlayerCacheByName(player.getName());
 				sPlayer.combatexperience = 0;
+				this.parent.updatePlayerScore(player);
 				return true;
 
 			}
@@ -58,6 +60,7 @@ public class ResetCmd implements CommandExecutor {
 				PlayerCache sPlayer = this.parent.getPlayerCacheByName(player.getName());
 				sPlayer.rangedexperience = this.parent.getExpFromLevel(level-1);
 				player.sendMessage("Your level was reset to: " + this.parent.getLevelFromExp(sPlayer.rangedexperience));
+				this.parent.updatePlayerScore(player);
 				return true;
 
 
@@ -65,6 +68,7 @@ public class ResetCmd implements CommandExecutor {
 				player.sendMessage("Speciality level completely reset");
 				PlayerCache sPlayer = this.parent.getPlayerCacheByName(player.getName());
 				sPlayer.rangedexperience = 0;
+				this.parent.updatePlayerScore(player);
 				return true;
 
 			}
@@ -78,6 +82,7 @@ public class ResetCmd implements CommandExecutor {
 				PlayerCache sPlayer = this.parent.getPlayerCacheByName(player.getName());
 				sPlayer.scholarlyexperience = this.parent.getExpFromLevel(level-1);
 				player.sendMessage("Your level was reset to: " + this.parent.getLevelFromExp(sPlayer.scholarlyexperience));
+				this.parent.updatePlayerScore(player);
 				return true;
 
 
@@ -85,6 +90,7 @@ public class ResetCmd implements CommandExecutor {
 				player.sendMessage("Speciality level completely reset");
 				PlayerCache sPlayer = this.parent.getPlayerCacheByName(player.getName());
 				sPlayer.scholarlyexperience = 0;
+				this.parent.updatePlayerScore(player);
 				return true;
 
 			}
@@ -98,6 +104,7 @@ public class ResetCmd implements CommandExecutor {
 				PlayerCache sPlayer = this.parent.getPlayerCacheByName(player.getName());
 				sPlayer.naturalexperience = this.parent.getExpFromLevel(level-1);
 				player.sendMessage("Your level was reset to: " + this.parent.getLevelFromExp(sPlayer.naturalexperience));
+				this.parent.updatePlayerScore(player);
 				return true;
 
 				
@@ -105,6 +112,7 @@ public class ResetCmd implements CommandExecutor {
 				player.sendMessage("Speciality level completely reset");
 				PlayerCache sPlayer = this.parent.getPlayerCacheByName(player.getName());
 				sPlayer.naturalexperience = 0;
+				this.parent.updatePlayerScore(player);
 				return true;
 
 			}

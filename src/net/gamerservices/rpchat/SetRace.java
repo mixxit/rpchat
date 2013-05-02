@@ -134,6 +134,7 @@ import org.bukkit.entity.Player;
 		     this.plugin.clearVotes(player);
 		     
 		     player.sendMessage("Your race is now: " + args[0]);
+		     this.plugin.updatePlayerScore(player);
 		     //this.plugin.PlayerGotoCapital(player);
 		     player.sendMessage("Your alliance is now: " + alliance);
 		     sPlayer.decoration = this.plugin.getDecoration(sPlayer);

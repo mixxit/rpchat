@@ -46,6 +46,8 @@ import net.citizensnpcs.api.npc.NPC;
 import net.milkbowl.vault.Vault;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
+
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -68,6 +70,12 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scoreboard.DisplaySlot;
+import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Score;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.ScoreboardManager;
+import org.bukkit.scoreboard.Team;
 
 
 public class rpchat extends JavaPlugin
@@ -112,7 +120,8 @@ public class rpchat extends JavaPlugin
 	public void onSentryPlayerHeal(Player from, Player target)
 	{
 		// pass it back to sentry
-		this.sentry.onSentryPlayerHealed(from, target);
+		
+		//this.sentry.onSentryPlayerHealed(from, target);
 		
 	}
 	
@@ -2062,6 +2071,7 @@ public class rpchat extends JavaPlugin
 		if (p != null)
 		{
 			p.hitpointsmax = amount;
+			this.updatePlayerScore(player);
 			return this.getPlayerHPBonusMax(player);
 
 		} else {
@@ -2087,6 +2097,7 @@ public class rpchat extends JavaPlugin
 		if (p != null)
 		{
 			p.hitpoints = amount;
+			this.updatePlayerScore(player);
 			return this.getPlayerHPBonus(player);
 
 		} else {
@@ -2126,6 +2137,7 @@ public class rpchat extends JavaPlugin
 				if (newlevel > oldlevel)
 				{
 					player.sendMessage("You gained a combat level!");
+					this.updatePlayerScore(player);
 				}
 				p.combatexperience = amount;
 				
@@ -2213,6 +2225,7 @@ public class rpchat extends JavaPlugin
 				if (newlevel > oldlevel)
 				{
 					player.sendMessage("You gained a ranged level!");
+					this.updatePlayerScore(player);
 				}
 
 				p.rangedexperience = amount;
@@ -2297,6 +2310,7 @@ public class rpchat extends JavaPlugin
 				if (newlevel > oldlevel)
 				{
 					player.sendMessage("You gained a scholarly magic level!");
+					this.updatePlayerScore(player);
 				}			  
 
 				p.scholarlyexperience = amount;
@@ -2382,6 +2396,7 @@ public class rpchat extends JavaPlugin
 				if (newlevel > oldlevel)
 				{
 					player.sendMessage("You gained a natural magic level!");
+					this.updatePlayerScore(player);
 				}	
 
 				p.naturalexperience = amount;
@@ -2757,7 +2772,9 @@ public class rpchat extends JavaPlugin
 		getCommand("who").setExecutor(new Who(this));
 		registerEvents();
 		loadQuests();
-
+		
+		
+		
 	}
 
 
@@ -3306,6 +3323,7 @@ public class rpchat extends JavaPlugin
 		if (s != null)
 		{
 			s.power = newpower;
+			this.updatePlayerScore(player);
 		} 
 	}
 
@@ -3315,6 +3333,7 @@ public class rpchat extends JavaPlugin
 		if (s != null)
 		{	
 			s.power = newpower;
+			this.updatePlayerScore(player);
 			player.sendMessage("Your mind relaxes as your power increases ("+this.getPlayerPower(player)+"/100)");
 		} else {
 			player.sendMessage("You cannot meditate when your character is being updated");
@@ -3541,6 +3560,55 @@ public class rpchat extends JavaPlugin
 		
 	}
 
+	
+	public void updatePlayerScore(Player player)
+	{
+		// is the player online?
+		
+		if (player.isOnline())
+		{
+			// find entry in commit list
+			if (this.playerdata.containsKey(player.getName()))
+			{
+				PlayerCache pc = this.playerdata.get(player.getName());
+				
+				ScoreboardManager manager = Bukkit.getScoreboardManager();
+				Scoreboard board = manager.getNewScoreboard();
+				board.registerNewObjective(player.getName(), "dummy");
+				
+				Objective objective = board.getObjective(player.getName());
+				
+				objective.setDisplaySlot(DisplaySlot.SIDEBAR);
+				
+				Score score = objective.getScore(Bukkit.getOfflinePlayer("power"));
+				score.setScore(pc.power);
+				
+				Score score2 = objective.getScore(Bukkit.getOfflinePlayer("shielding"));
+				score2.setScore(pc.hitpoints);
+				
+				Score score3 = objective.getScore(Bukkit.getOfflinePlayer(pc.language));
+				score3.setScore(-1);
+
+				// looks horrible
+				//Score score4 = objective.getScore(Bukkit.getOfflinePlayer("Combat"));
+				//score4.setScore(this.getPlayerCombatLevel(player));
+				//Score score5 = objective.getScore(Bukkit.getOfflinePlayer("Ranged"));
+				//score5.setScore(this.getPlayerRangedLevel(player));
+				//Score score6 = objective.getScore(Bukkit.getOfflinePlayer("Scholar"));
+				//score6.setScore(this.getScholarlyMagicLevel(player));
+				//Score score7 = objective.getScore(Bukkit.getOfflinePlayer("Nature"));
+				//score7.setScore(this.getNaturalMagicLevel(player));
+
+				Score score8 = objective.getScore(Bukkit.getOfflinePlayer(pc.race));
+				score8.setScore(-1);
+				
+				player.setScoreboard(board);
+			}
+		}
+		
+	}
+	
+	
 	public void commitPlayerCache(String name)
 	{
 		// find entry in commit list

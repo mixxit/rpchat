@@ -110,6 +110,7 @@ public class SetLanguage implements CommandExecutor {
 			if (this.parent.getLanguageSkill(player.getName(), newlang) == 100)
 			{
 				sPlayer.language = newlang;
+				this.parent.updatePlayerScore(player);
 				player.sendMessage("Your language is now: " + arg3[0]);
 				return true;
 			} else {

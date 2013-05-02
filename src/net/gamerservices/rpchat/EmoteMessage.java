@@ -1,6 +1,5 @@
  package net.gamerservices.rpchat;
  
- import com.palmergames.bukkit.towny.Towny;
  import java.io.PrintStream;
  import org.bukkit.ChatColor;
  import org.bukkit.Location;
@@ -15,12 +14,11 @@ import org.bukkit.entity.Player;
    implements CommandExecutor
  {
    private rpchat parent;
-   private Towny towny;
  
    public EmoteMessage(rpchat rpchat)
    {
      this.parent = rpchat;
-     this.towny = this.parent.getTowny();
+
    }
  
    public static String arrayToString(String[] a, String separator) {

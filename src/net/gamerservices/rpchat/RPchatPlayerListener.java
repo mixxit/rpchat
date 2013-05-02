@@ -76,6 +76,8 @@ public class RPchatPlayerListener implements Listener
 			
 		}
 		*/
+		
+		this.plugin.updatePlayerScore(event.getPlayer());
 	}
 	
 
